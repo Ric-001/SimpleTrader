@@ -31,7 +31,7 @@ namespace SimpleTrader.WPF
             FrameworkElement.LanguageProperty.OverrideMetadata(
                 typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(
-                    XmlLanguage.GetLanguage(culture.IetfLanguageTag))); ;
+                    XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
 
             // 1. Construir configuración leyendo appsettings.json del proyecto WPF
             var configuration = new ConfigurationBuilder()
@@ -43,6 +43,18 @@ namespace SimpleTrader.WPF
             // 2. Mapear sección FinancialModelingPrep a las opciones
             var fmpOptions = new FinancialModelingPrepOptions();
             configuration.GetSection("FinancialModelingPrep").Bind(fmpOptions);
+
+            // ApiKey desde variable de entorno
+            var apiKeyFromEnv = Environment.GetEnvironmentVariable("FMP_API_KEY");
+            if (string.IsNullOrWhiteSpace(apiKeyFromEnv))
+            {
+                MessageBox.Show("La variable de entorno 'FMP_API_KEY' no está configurada.", "Error de configuración",
+                    MessageBoxButton.OK,MessageBoxImage.Error);
+
+                Shutdown();
+                return;
+            }
+            fmpOptions.ApiKey = apiKeyFromEnv;
 
             // 3.Crear servicios con las opciones
             StockService = new StockPriceService(fmpOptions);

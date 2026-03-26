@@ -1,6 +1,7 @@
 ﻿using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
+using SimpleTrader.FinancialModelingPrepAPI.Results;
 using System.Text.Json;
 
 namespace SimpleTrader.FinancialModelingPrepAPI.Services
@@ -17,30 +18,16 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Services
                 throw new InvalidOperationException("ApiKey de FinancialModelingPrep no configurada.");
         }
 
-        //private const string API_KEY = "RYiPoM5uCF5boZ9HUh5u8pZ3w0k9yFcF";
-
+        
 
         public async Task<MajorIndex> GetMajorIndex(MajorIndexType indexType)
         {
-            using HttpClient client = new HttpClient();
+
+            using FinancialModelingPrepHttpCliente client = new(_options);
+            var endpoint = _options.ProfileEndpoint.TrimStart('/');
             string url = GetUriForIndexType(indexType);
 
-            HttpResponseMessage response = await client.GetAsync(url);
-            //response.EnsureSuccessStatusCode();
-
-            string jsonResponse = await response.Content.ReadAsStringAsync();
-
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            List<MajorIndexDto>? dtoList = JsonSerializer.Deserialize<List<MajorIndexDto>>(jsonResponse, options);
-
-            if (dtoList == null || dtoList.Count == 0)
-                throw new Exception("No se han recibido datos del índice.");
-
-            MajorIndexDto dto = dtoList[0];
+            var dto = await client.GetAsync<MajorIndexDto>(url);
 
             MajorIndex majorIndex = new MajorIndex
             {
@@ -56,9 +43,9 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Services
         {
             return indexType switch
             {
-                MajorIndexType.DowJones => $"https://financialmodelingprep.com/stable/profile?symbol=DTSQ&apikey={_options.ApiKey}",
-                MajorIndexType.Nasdaq => $"https://financialmodelingprep.com/stable/profile?symbol=AAPL&apikey={_options.ApiKey}",
-                MajorIndexType.SP500 => $"https://financialmodelingprep.com/stable/profile?symbol=RAAQ&apikey={_options.ApiKey}",
+                MajorIndexType.DowJones => $"?symbol=DTSQ",
+                MajorIndexType.Nasdaq => $"?symbol=AAPL",
+                MajorIndexType.SP500 => $"?symbol=RAAQ",
                 _ => throw new ArgumentException("Tipo de índice no soportado.")
             };
         }
