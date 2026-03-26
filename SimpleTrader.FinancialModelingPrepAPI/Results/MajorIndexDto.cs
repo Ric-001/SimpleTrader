@@ -1,9 +1,8 @@
 ﻿namespace SimpleTrader.FinancialModelingPrepAPI.Services
 {
-    public partial class MajorIndexService
-    {
+    
         // DTO interno que refleja el JSON de la API
-        private class MajorIndexDto
+        public class MajorIndexDto
         {
             public string Symbol { get; set; } = string.Empty;
             public double Price { get; set; }
@@ -48,5 +47,5 @@
             public bool IsAdr { get; set; }
             public bool IsFund { get; set; }
         }
-    }
+    
 }

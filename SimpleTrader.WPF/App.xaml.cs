@@ -2,6 +2,7 @@
 using SimpleTrader.Domain.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.FinancialModelingPrepAPI.Services;
+using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
 using System.Configuration;
 using System.Data;
@@ -47,12 +48,17 @@ namespace SimpleTrader.WPF
             StockService = new StockPriceService(fmpOptions);
             MajorIndexService = new MajorIndexService(fmpOptions);
 
+            // 4. Crear Navigator inyectando el servicio necesario
+            var navigator = new Navigator(MajorIndexService);
+
             // 2. Crear VM principal inyectando el servicio
-            var mainViewModel = new MainViewModel(App.MajorIndexService);
+            var mainViewModel = new MainViewModel(App.MajorIndexService, StockService, navigator);
 
             // 3. Crear ventana principal
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.DataContext = mainViewModel;
+            MainWindow mainWindow = new MainWindow
+            {
+                DataContext = mainViewModel
+            };
             mainWindow.Show();
             
             base.OnStartup(e);

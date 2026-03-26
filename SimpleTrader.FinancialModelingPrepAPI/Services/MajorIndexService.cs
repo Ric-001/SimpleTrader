@@ -1,12 +1,24 @@
 ﻿using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services;
+using SimpleTrader.FinancialModelingPrepAPI.Options;
 using System.Text.Json;
 
 namespace SimpleTrader.FinancialModelingPrepAPI.Services
 {
     public partial class MajorIndexService : IMajorIndexService
     {
-        private const string API_KEY = "RYiPoM5uCF5boZ9HUh5u8pZ3w0k9yFcF";
+        private readonly FinancialModelingPrepOptions _options;
+
+        public MajorIndexService(FinancialModelingPrepOptions options)
+        {
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+
+            if (string.IsNullOrWhiteSpace(_options.ApiKey))
+                throw new InvalidOperationException("ApiKey de FinancialModelingPrep no configurada.");
+        }
+
+        //private const string API_KEY = "RYiPoM5uCF5boZ9HUh5u8pZ3w0k9yFcF";
+
 
         public async Task<MajorIndex> GetMajorIndex(MajorIndexType indexType)
         {
@@ -44,9 +56,9 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Services
         {
             return indexType switch
             {
-                MajorIndexType.DowJones => $"https://financialmodelingprep.com/stable/profile?symbol=DTSQ&apikey={API_KEY}",
-                MajorIndexType.Nasdaq => $"https://financialmodelingprep.com/stable/profile?symbol=AAPL&apikey={API_KEY}",
-                MajorIndexType.SP500 => $"https://financialmodelingprep.com/stable/profile?symbol=RAAQ&apikey={API_KEY}",
+                MajorIndexType.DowJones => $"https://financialmodelingprep.com/stable/profile?symbol=DTSQ&apikey={_options.ApiKey}",
+                MajorIndexType.Nasdaq => $"https://financialmodelingprep.com/stable/profile?symbol=AAPL&apikey={_options.ApiKey}",
+                MajorIndexType.SP500 => $"https://financialmodelingprep.com/stable/profile?symbol=RAAQ&apikey={_options.ApiKey}",
                 _ => throw new ArgumentException("Tipo de índice no soportado.")
             };
         }

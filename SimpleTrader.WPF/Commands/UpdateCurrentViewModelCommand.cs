@@ -1,4 +1,5 @@
-﻿using SimpleTrader.FinancialModelingPrepAPI.Services;
+﻿using SimpleTrader.Domain.Services;
+using SimpleTrader.FinancialModelingPrepAPI.Services;
 using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
 using System;
@@ -12,10 +13,12 @@ namespace SimpleTrader.WPF.Commands
     {
         public event EventHandler? CanExecuteChanged;
         private INavigator _navigator;
+        private IMajorIndexService _majorIndexService;
 
-        public UpdateCurrentViewModelCommand(INavigator navigator)
+        public UpdateCurrentViewModelCommand(INavigator navigator, IMajorIndexService majorIndexService)
         {
             _navigator = navigator;
+            _majorIndexService = majorIndexService;
         }
 
         public bool CanExecute(object? parameter)
@@ -29,7 +32,7 @@ namespace SimpleTrader.WPF.Commands
 
             _navigator.CurrentViewModel = viewType switch
             {
-                ViewType.Home => new HomeViewModel(MajorIndexListingViewModel.LoadMajorIndexViewModel(new MajorIndexService())),
+                ViewType.Home => new HomeViewModel(MajorIndexListingViewModel.LoadMajorIndexViewModel(_majorIndexService)),
                 ViewType.Portfolio => new PortfolioViewModel(),
                 _ => _navigator.CurrentViewModel
             };

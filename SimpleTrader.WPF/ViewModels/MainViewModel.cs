@@ -9,11 +9,14 @@ namespace SimpleTrader.WPF.ViewModels
     internal class MainViewModel : ViewModelBase
     {
         private readonly IMajorIndexService _majorIndexService;
-        public INavigator Navigator { get; set; } = new Navigator();
+        private readonly IStockService _stockService;
+        public INavigator Navigator { get; set; } 
 
-        public MainViewModel(IMajorIndexService majorIndexService)
+        public MainViewModel(IMajorIndexService majorIndexService, IStockService stockService, INavigator navigator)
         {
             _majorIndexService = majorIndexService;
+            _stockService = stockService;
+            Navigator = navigator;
             Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Home);
         }
     }
