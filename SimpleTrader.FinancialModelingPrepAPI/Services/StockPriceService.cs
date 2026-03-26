@@ -1,16 +1,29 @@
 ﻿using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services;
+using SimpleTrader.FinancialModelingPrepAPI.Options;
 using System.Text.Json;
 
 namespace SimpleTrader.FinancialModelingPrepAPI.Services
 {
     public class StockPriceService : IStockService
     {
-        private const string API_KEY = "RYiPoM5uCF5boZ9HUh5u8pZ3w0k9yFcF";
+        private readonly FinancialModelingPrepOptions _options;
+
+        public StockPriceService(FinancialModelingPrepOptions options)
+        {
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+
+            if (string.IsNullOrWhiteSpace(_options.ApiKey))
+                throw new InvalidOperationException("ApiKey de FinancialModelingPrep no configurada.");
+        }
+
         public async Task<double> GetPrice(string symbol)
         {
             using HttpClient client = new HttpClient();
-            string url = $"https://financialmodelingprep.com/stable/profile?symbol={symbol}&apikey={API_KEY}";
+            var baseUrl = _options.BaseUrl.TrimEnd('/');
+            var endpoint = _options.ProfileEndpoint.TrimStart('/');
+
+            string url = $"{baseUrl}/{endpoint}?symbol={symbol}&apikey={_options.ApiKey}"; 
 
             HttpResponseMessage response = await client.GetAsync(url);
             //response.EnsureSuccessStatusCode();
@@ -22,21 +35,21 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Services
                 PropertyNameCaseInsensitive = true
             };
 
-            List<MajorIndexDto>? dtoList = JsonSerializer.Deserialize<List<MajorIndexDto>>(jsonResponse, options);
+            //List<MajorIndexDto>? dtoList = JsonSerializer.Deserialize<List<MajorIndexDto>>(jsonResponse, options);
 
-            if (dtoList == null || dtoList.Count == 0)
-                throw new Exception("No se han recibido datos del índice.");
+            //if (dtoList == null || dtoList.Count == 0)
+            //    throw new Exception("No se han recibido datos del índice.");
 
-            MajorIndexDto dto = dtoList[0];
+            //MajorIndexDto dto = dtoList[0];
 
-            MajorIndex majorIndex = new MajorIndex
-            {
-                Price = dto.Price,
-                Changes = dto.Change,
-                Type = indexType
-            };
+            //MajorIndex majorIndex = new MajorIndex
+            //{
+            //    Price = dto.Price,
+            //    Changes = dto.Change,
+            //    Type = indexType
+            //};
 
-            return majorIndex;
+            return 12.0;
         }
     }
 }

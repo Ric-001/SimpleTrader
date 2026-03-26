@@ -1,9 +1,12 @@
-﻿using SimpleTrader.Domain.Services;
+﻿using Microsoft.Extensions.Configuration;
+using SimpleTrader.Domain.Services;
+using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.FinancialModelingPrepAPI.Services;
 using SimpleTrader.WPF.ViewModels;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Markup;
 
@@ -14,8 +17,12 @@ namespace SimpleTrader.WPF
     /// </summary>
     public partial class App : Application
     {
+        public static IStockService StockService { get; private set; } = null!;
+        public static IMajorIndexService MajorIndexService { get; private set; } = null!;
+
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Cultura
             var culture = new CultureInfo("es-ES");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
@@ -23,10 +30,29 @@ namespace SimpleTrader.WPF
             FrameworkElement.LanguageProperty.OverrideMetadata(
                 typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(
-                    XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
+                    XmlLanguage.GetLanguage(culture.IetfLanguageTag))); ;
 
+            // 1. Construir configuración leyendo appsettings.json del proyecto WPF
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+
+            // 2. Mapear sección FinancialModelingPrep a las opciones
+            var fmpOptions = new FinancialModelingPrepOptions();
+            configuration.GetSection("FinancialModelingPrep").Bind(fmpOptions);
+
+            // 3.Crear servicios con las opciones
+            StockService = new StockPriceService(fmpOptions);
+            MajorIndexService = new MajorIndexService(fmpOptions);
+
+            // 2. Crear VM principal inyectando el servicio
+            var mainViewModel = new MainViewModel(App.MajorIndexService);
+
+            // 3. Crear ventana principal
             MainWindow mainWindow = new MainWindow();
-            mainWindow.DataContext = new MainViewModel();
+            mainWindow.DataContext = mainViewModel;
             mainWindow.Show();
             
             base.OnStartup(e);
