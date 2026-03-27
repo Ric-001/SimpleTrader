@@ -34,11 +34,11 @@ namespace SimpleTrader.FinancialModelingPrepAPI
                 PropertyNameCaseInsensitive = true
             };
 
-            
+            List<T>? result;
 
             try
             {
-                var result = JsonSerializer.Deserialize<T>(jsonResponse, options);
+                result = JsonSerializer.Deserialize<List<T>>(jsonResponse, options);
             }
             catch (Exception ex)
             {
@@ -48,7 +48,10 @@ namespace SimpleTrader.FinancialModelingPrepAPI
                 throw; // vuelve a lanzar para no ocultar el error
             }
 
-            return result == null ? throw new InvalidOperationException($"Failed to deserialize response from {uri}") : result;
+            if (result == null || result.Count == 0)
+                throw new InvalidOperationException($"Failed to deserialize response from {uri}");
+            
+            return result[0];
         }
     }
 }
