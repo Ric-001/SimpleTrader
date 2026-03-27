@@ -4,8 +4,6 @@ using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.FinancialModelingPrepAPI.Services;
 using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
-using System.Configuration;
-using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Windows;
@@ -54,11 +52,14 @@ namespace SimpleTrader.WPF
                 Shutdown();
                 return;
             }
+            
             fmpOptions.ApiKey = apiKeyFromEnv;
 
             // 3.Crear servicios con las opciones
             StockService = new StockPriceService(fmpOptions);
             MajorIndexService = new MajorIndexService(fmpOptions);
+
+            StockService.GetPrice("AAPL");
 
             // 4. Crear Navigator inyectando el servicio necesario
             var navigator = new Navigator(MajorIndexService);

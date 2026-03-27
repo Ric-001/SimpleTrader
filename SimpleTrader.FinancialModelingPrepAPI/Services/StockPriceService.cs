@@ -1,8 +1,8 @@
-﻿using SimpleTrader.Domain.Models;
+﻿using SimpleTrader.Domain.Exceptions;
 using SimpleTrader.Domain.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.FinancialModelingPrepAPI.Results;
-using System.Text.Json;
+
 
 namespace SimpleTrader.FinancialModelingPrepAPI.Services
 {
@@ -22,13 +22,12 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Services
         {
             using FinancialModelingPrepHttpCliente client = new (_options);
             
-            var endpoint = _options.ProfileEndpoint.TrimStart('/');
-
             //"https://financialmodelingprep.com/stable/profile?symbol=AAPL"
 
-            string url = $"/{endpoint}?symbol={symbol}";
+            StockPriceDto stockPrice = await client.GetAsync<StockPriceDto>(symbol);
 
-            StockPriceDto stockPrice = await client.GetAsync<StockPriceDto>(url);
+            if (stockPrice.Price == 0)
+                throw new InvalidSymbolException(symbol);
 
             return stockPrice.Price;
         }

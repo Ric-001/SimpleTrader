@@ -24,7 +24,7 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Services
         {
 
             using FinancialModelingPrepHttpCliente client = new(_options);
-            var endpoint = _options.ProfileEndpoint.TrimStart('/');
+            //var endpoint = _options.ProfileEndpoint.TrimStart('/');
             string url = GetUriForIndexType(indexType);
 
             var dto = await client.GetAsync<MajorIndexDto>(url);
@@ -43,9 +43,9 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Services
         {
             return indexType switch
             {
-                MajorIndexType.DowJones => $"?symbol=DTSQ",
-                MajorIndexType.Nasdaq => $"?symbol=AAPL",
-                MajorIndexType.SP500 => $"?symbol=RAAQ",
+                MajorIndexType.DowJones => $"DTSQ",
+                MajorIndexType.Nasdaq => $"AAPL",
+                MajorIndexType.SP500 => $"RAAQ",
                 _ => throw new ArgumentException("Tipo de índice no soportado.")
             };
         }
