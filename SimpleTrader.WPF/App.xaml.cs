@@ -1,5 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services;
+using SimpleTrader.Domain.Services.TransactionServices;
+using SimpleTrader.EntityFramework;
+using SimpleTrader.EntityFramework.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.FinancialModelingPrepAPI.Services;
 using SimpleTrader.WPF.State.Navigators;
@@ -16,10 +21,10 @@ namespace SimpleTrader.WPF
     /// </summary>
     public partial class App : Application
     {
-        public static IStockService StockService { get; private set; } = null!;
+        public static IStockPriceService StockService { get; private set; } = null!;
         public static IMajorIndexService MajorIndexService { get; private set; } = null!;
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             // Cultura
             var culture = new CultureInfo("es-ES");
@@ -55,11 +60,24 @@ namespace SimpleTrader.WPF
             
             fmpOptions.ApiKey = apiKeyFromEnv;
 
+            
+            
+
+            
+            
             // 3.Crear servicios con las opciones
             StockService = new StockPriceService(fmpOptions);
             MajorIndexService = new MajorIndexService(fmpOptions);
 
-            StockService.GetPrice("AAPL");
+            
+            
+            IDataService<Account> accountService = new AccountDataService(new EntityFramework.SimpleTraderDbContextFactory());
+            IBuyStockService buyStockService = new BuyStockService(StockService, accountService);
+            Account? buyer = await accountService.Get(1);
+
+            if (buyer != null)
+                await buyStockService.BuyStock(buyer, "T", 5);
+            
 
             // 4. Crear Navigator inyectando el servicio necesario
             var navigator = new Navigator(MajorIndexService);
@@ -76,6 +94,8 @@ namespace SimpleTrader.WPF
             
             base.OnStartup(e);
         }
+
+        
     }
 
 }

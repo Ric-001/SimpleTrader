@@ -6,7 +6,7 @@ using SimpleTrader.FinancialModelingPrepAPI.Results;
 
 namespace SimpleTrader.FinancialModelingPrepAPI.Services
 {
-    public class StockPriceService : IStockService
+    public class StockPriceService : IStockPriceService
     {
         private readonly FinancialModelingPrepOptions _options;
 
