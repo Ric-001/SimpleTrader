@@ -60,11 +60,11 @@ namespace SimpleTrader.WPF
             
             fmpOptions.ApiKey = apiKeyFromEnv;
 
-            
-            
+            IServiceProvider serviceProvider = CreateServiceProvider();
 
-            
-            
+
+
+
             // 3.Crear servicios con las opciones
             StockService = new StockPriceService(fmpOptions);
             MajorIndexService = new MajorIndexService(fmpOptions);
@@ -95,7 +95,20 @@ namespace SimpleTrader.WPF
             base.OnStartup(e);
         }
 
-        
+        private IServiceProvider CreateServiceProvider()
+        {
+            IServiceCollection services = new ServiceCollection();
+
+            services.AddSingleton<SimpleTraderDbContextFactory>();
+            services.AddSingleton<IDataService<Account>, AccountDataService>();
+
+            services.AddSingleton<IMajorIndexService, MajorIndexService>();
+            services.AddSingleton<IStockPriceService, StockPriceService>();
+            services.AddSingleton<IBuyStockService, BuyStockService>();
+
+
+            return services.BuildServiceProvider();
+        }
     }
 
 }
