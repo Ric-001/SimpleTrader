@@ -1,5 +1,6 @@
 ﻿using SimpleTrader.Domain.Services;
 using SimpleTrader.WPF.Commands;
+using SimpleTrader.WPF.Factories;
 using SimpleTrader.WPF.Models;
 using SimpleTrader.WPF.ViewModels;
 using System.ComponentModel;
@@ -9,21 +10,27 @@ namespace SimpleTrader.WPF.State.Navigators
 {
     public class Navigator : ObservableModel, INavigator
     {
-        private ViewModelBase _currentViewModel;
+        
+        //private readonly ISimpleTraderViewModelAbastractFactory _viewModelFactory;
 
-        public ViewModelBase CurrentViewModel
+
+        private ViewModelBase? _currentViewModel;
+
+
+        public ViewModelBase? CurrentViewModel
         {
             get => _currentViewModel;
             set { _currentViewModel = value; OnPropertyChanged(nameof(CurrentViewModel)); }
         }
         
-        public ICommand UpdateCurrentViewModelCommand { get; } 
+        public ICommand UpdateCurrentViewModelCommand { get; init; } 
 
+        
 
-        public Navigator(IMajorIndexService majorIndexService)
+        public Navigator(ISimpleTraderViewModelAbastractFactory viewModelFactory)
         {
             // Inyectamos el servicio y creamos el comando UNA VEZ
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this, majorIndexService);
+            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this, viewModelFactory);
         }
 
 

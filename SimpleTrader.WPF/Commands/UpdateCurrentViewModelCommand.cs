@@ -1,5 +1,6 @@
 ﻿using SimpleTrader.Domain.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Services;
+using SimpleTrader.WPF.Factories;
 using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
 using System;
@@ -12,13 +13,13 @@ namespace SimpleTrader.WPF.Commands
     internal class UpdateCurrentViewModelCommand : ICommand
     {
         public event EventHandler? CanExecuteChanged;
-        private INavigator _navigator;
-        private IMajorIndexService _majorIndexService;
-
-        public UpdateCurrentViewModelCommand(INavigator navigator, IMajorIndexService majorIndexService)
+        private readonly INavigator _navigator;
+        private readonly ISimpleTraderViewModelAbastractFactory _viewModelFactory;
+        
+        public UpdateCurrentViewModelCommand(INavigator navigator, ISimpleTraderViewModelAbastractFactory viewModelFactory)
         {
             _navigator = navigator;
-            _majorIndexService = majorIndexService;
+            _viewModelFactory = viewModelFactory;
         }
 
         public bool CanExecute(object? parameter)
@@ -30,12 +31,8 @@ namespace SimpleTrader.WPF.Commands
         {
             if(parameter is not ViewType viewType) return;
 
-            _navigator.CurrentViewModel = viewType switch
-            {
-                ViewType.Home => new HomeViewModel(MajorIndexListingViewModel.LoadMajorIndexViewModel(_majorIndexService)),
-                ViewType.Portfolio => new PortfolioViewModel(),
-                _ => _navigator.CurrentViewModel
-            };
+            _navigator.CurrentViewModel = _viewModelFactory.CreateViewModel(viewType);
+
         }
     }
 }

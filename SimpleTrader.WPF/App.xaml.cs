@@ -7,6 +7,7 @@ using SimpleTrader.EntityFramework;
 using SimpleTrader.EntityFramework.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.FinancialModelingPrepAPI.Services;
+using SimpleTrader.WPF.Factories;
 using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
 using System.Globalization;
@@ -21,7 +22,6 @@ namespace SimpleTrader.WPF
     /// </summary>
     public partial class App : Application
     {
-        public static IStockPriceService StockService { get; private set; } = null!;
         public static IMajorIndexService MajorIndexService { get; private set; } = null!;
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -60,52 +60,42 @@ namespace SimpleTrader.WPF
             
             fmpOptions.ApiKey = apiKeyFromEnv;
 
-            IServiceProvider serviceProvider = CreateServiceProvider();
-
-
-
-
-            // 3.Crear servicios con las opciones
-            StockService = new StockPriceService(fmpOptions);
-            MajorIndexService = new MajorIndexService(fmpOptions);
-
+            // 3.Crear servicios con DI usando las opciones
+            IServiceProvider serviceProvider = CreateServiceProvider(configuration, fmpOptions);
             
-            
-            IDataService<Account> accountService = new AccountDataService(new EntityFramework.SimpleTraderDbContextFactory());
-            IBuyStockService buyStockService = new BuyStockService(StockService, accountService);
-            Account? buyer = await accountService.Get(1);
-
-            if (buyer != null)
-                await buyStockService.BuyStock(buyer, "T", 5);
-            
-
-            // 4. Crear Navigator inyectando el servicio necesario
-            var navigator = new Navigator(MajorIndexService);
-
             // 2. Crear VM principal inyectando el servicio
-            var mainViewModel = new MainViewModel(App.MajorIndexService, StockService, navigator);
+            var mainViewModel = serviceProvider.GetRequiredService<MainViewModel>();
 
-            // 3. Crear ventana principal
-            MainWindow mainWindow = new MainWindow
-            {
-                DataContext = mainViewModel
-            };
-            mainWindow.Show();
-            
+            //// 3. Crear ventana principal
+            Window window = serviceProvider.GetRequiredService<MainWindow>();
+            window.Show();
+
             base.OnStartup(e);
         }
 
-        private IServiceProvider CreateServiceProvider()
+        private IServiceProvider CreateServiceProvider(IConfiguration configuration, FinancialModelingPrepOptions fmpOptions)
         {
             IServiceCollection services = new ServiceCollection();
 
+            services.AddSingleton<IConfiguration>(configuration);
+            services.AddSingleton<FinancialModelingPrepOptions>(fmpOptions);
+
             services.AddSingleton<SimpleTraderDbContextFactory>();
             services.AddSingleton<IDataService<Account>, AccountDataService>();
-
             services.AddSingleton<IMajorIndexService, MajorIndexService>();
             services.AddSingleton<IStockPriceService, StockPriceService>();
             services.AddSingleton<IBuyStockService, BuyStockService>();
 
+            services.AddSingleton<ISimpleTraderViewModelAbastractFactory, SimpleTraderViewModelAbastractFactory>();
+            services.AddSingleton<ISimpleTraderViewModelFactory<HomeViewModel>, HomeViewModelFactory>();
+            services.AddSingleton<ISimpleTraderViewModelFactory<PortfolioViewModel>, PortfolioViewModelFactory>();
+            services.AddSingleton<ISimpleTraderViewModelFactory<MajorIndexListingViewModel>, MajorIndexListingViewModelFactory>();
+
+
+
+            services.AddScoped<INavigator, Navigator>();
+            services.AddScoped<MainViewModel>();
+            services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
 
             return services.BuildServiceProvider();
         }

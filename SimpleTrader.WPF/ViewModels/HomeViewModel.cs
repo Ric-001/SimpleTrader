@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SimpleTrader.WPF.ViewModels
 {
-    internal class HomeViewModel : ViewModelBase
+    public class HomeViewModel : ViewModelBase
     {
         public MajorIndexListingViewModel MajorIndexListingViewModel { get; set; }
 
