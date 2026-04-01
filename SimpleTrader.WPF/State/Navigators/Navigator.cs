@@ -11,9 +11,6 @@ namespace SimpleTrader.WPF.State.Navigators
     public class Navigator : ObservableModel, INavigator
     {
         
-        //private readonly ISimpleTraderViewModelAbastractFactory _viewModelFactory;
-
-
         private ViewModelBase? _currentViewModel;
 
 
@@ -25,9 +22,8 @@ namespace SimpleTrader.WPF.State.Navigators
         
         public ICommand UpdateCurrentViewModelCommand { get; init; } 
 
-        
 
-        public Navigator(ISimpleTraderViewModelAbastractFactory viewModelFactory)
+        public Navigator(IRootTraderViewModelFactory viewModelFactory)
         {
             // Inyectamos el servicio y creamos el comando UNA VEZ
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this, viewModelFactory);

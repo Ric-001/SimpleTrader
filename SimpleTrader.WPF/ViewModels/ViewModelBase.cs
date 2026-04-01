@@ -8,7 +8,7 @@ namespace SimpleTrader.WPF.ViewModels
 {
     public class ViewModelBase : ObservableModel
     {
-        protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
             if (EqualityComparer<T>.Default.Equals(field, value))
                 return false;

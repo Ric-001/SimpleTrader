@@ -13,4 +13,5 @@ namespace SimpleTrader.WPF.ViewModels
             MajorIndexListingViewModel = majorIndexListingViewModel;
         }
     }
+
 }

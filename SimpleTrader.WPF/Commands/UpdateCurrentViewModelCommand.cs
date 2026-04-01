@@ -14,9 +14,9 @@ namespace SimpleTrader.WPF.Commands
     {
         public event EventHandler? CanExecuteChanged;
         private readonly INavigator _navigator;
-        private readonly ISimpleTraderViewModelAbastractFactory _viewModelFactory;
+        private readonly IRootTraderViewModelFactory _viewModelFactory;
         
-        public UpdateCurrentViewModelCommand(INavigator navigator, ISimpleTraderViewModelAbastractFactory viewModelFactory)
+        public UpdateCurrentViewModelCommand(INavigator navigator, IRootTraderViewModelFactory viewModelFactory)
         {
             _navigator = navigator;
             _viewModelFactory = viewModelFactory;
