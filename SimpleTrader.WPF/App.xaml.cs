@@ -7,9 +7,9 @@ using SimpleTrader.EntityFramework;
 using SimpleTrader.EntityFramework.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.FinancialModelingPrepAPI.Services;
-using SimpleTrader.WPF.Factories;
 using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
+using SimpleTrader.WPF.ViewModels.Factories;
 using System.Globalization;
 using System.IO;
 using System.Windows;
@@ -86,7 +86,7 @@ namespace SimpleTrader.WPF
             services.AddSingleton<IStockPriceService, StockPriceService>();
             services.AddSingleton<IBuyStockService, BuyStockService>();
 
-            services.AddSingleton<IRootTraderViewModelFactory, RootSimpleTraderViewModelFactory>();
+            services.AddSingleton<IRootSimpleTraderViewModelFactory, RootSimpleTraderViewModelFactory>();
             services.AddSingleton<ISimpleTraderViewModelFactory<HomeViewModel>, HomeViewModelFactory>();
             services.AddSingleton<ISimpleTraderViewModelFactory<PortfolioViewModel>, PortfolioViewModelFactory>();
             services.AddSingleton<ISimpleTraderViewModelFactory<MajorIndexListingViewModel>, MajorIndexListingViewModelFactory>();

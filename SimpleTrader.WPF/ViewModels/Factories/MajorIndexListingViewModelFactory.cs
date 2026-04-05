@@ -1,7 +1,7 @@
 ﻿using SimpleTrader.Domain.Services;
 using SimpleTrader.WPF.ViewModels;
 
-namespace SimpleTrader.WPF.Factories
+namespace SimpleTrader.WPF.ViewModels.Factories
 {
     public class MajorIndexListingViewModelFactory : ISimpleTraderViewModelFactory<MajorIndexListingViewModel>
     {

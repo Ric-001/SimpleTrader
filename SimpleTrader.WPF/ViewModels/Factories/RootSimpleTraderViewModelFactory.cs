@@ -1,9 +1,9 @@
 ﻿using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
 
-namespace SimpleTrader.WPF.Factories
+namespace SimpleTrader.WPF.ViewModels.Factories
 {
-    public class RootSimpleTraderViewModelFactory : IRootTraderViewModelFactory
+    public class RootSimpleTraderViewModelFactory : IRootSimpleTraderViewModelFactory
     {
         private readonly ISimpleTraderViewModelFactory<HomeViewModel> _homeViewModelFactory;
         private readonly ISimpleTraderViewModelFactory<PortfolioViewModel> _portfolioViewModelFactory;

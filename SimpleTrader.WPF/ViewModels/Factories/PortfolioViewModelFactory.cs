@@ -1,6 +1,6 @@
 ﻿using SimpleTrader.WPF.ViewModels;
 
-namespace SimpleTrader.WPF.Factories
+namespace SimpleTrader.WPF.ViewModels.Factories
 {
     public class PortfolioViewModelFactory : ISimpleTraderViewModelFactory<PortfolioViewModel>
     {

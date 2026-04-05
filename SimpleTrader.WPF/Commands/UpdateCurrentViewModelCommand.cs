@@ -1,8 +1,6 @@
-﻿using SimpleTrader.Domain.Services;
-using SimpleTrader.FinancialModelingPrepAPI.Services;
-using SimpleTrader.WPF.Factories;
+﻿using SimpleTrader.FinancialModelingPrepAPI.Services;
 using SimpleTrader.WPF.State.Navigators;
-using SimpleTrader.WPF.ViewModels;
+using SimpleTrader.WPF.ViewModels.Factories;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,9 +12,9 @@ namespace SimpleTrader.WPF.Commands
     {
         public event EventHandler? CanExecuteChanged;
         private readonly INavigator _navigator;
-        private readonly IRootTraderViewModelFactory _viewModelFactory;
+        private readonly IRootSimpleTraderViewModelFactory _viewModelFactory;
         
-        public UpdateCurrentViewModelCommand(INavigator navigator, IRootTraderViewModelFactory viewModelFactory)
+        public UpdateCurrentViewModelCommand(INavigator navigator, IRootSimpleTraderViewModelFactory viewModelFactory)
         {
             _navigator = navigator;
             _viewModelFactory = viewModelFactory;
@@ -35,4 +33,5 @@ namespace SimpleTrader.WPF.Commands
 
         }
     }
+
 }

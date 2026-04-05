@@ -1,8 +1,8 @@
 ﻿using SimpleTrader.Domain.Services;
 using SimpleTrader.WPF.Commands;
-using SimpleTrader.WPF.Factories;
 using SimpleTrader.WPF.Models;
 using SimpleTrader.WPF.ViewModels;
+using SimpleTrader.WPF.ViewModels.Factories;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -23,7 +23,7 @@ namespace SimpleTrader.WPF.State.Navigators
         public ICommand UpdateCurrentViewModelCommand { get; init; } 
 
 
-        public Navigator(IRootTraderViewModelFactory viewModelFactory)
+        public Navigator(IRootSimpleTraderViewModelFactory viewModelFactory)
         {
             // Inyectamos el servicio y creamos el comando UNA VEZ
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this, viewModelFactory);

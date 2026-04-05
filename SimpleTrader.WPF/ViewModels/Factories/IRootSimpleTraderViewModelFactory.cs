@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SimpleTrader.WPF.Factories
+namespace SimpleTrader.WPF.ViewModels.Factories
 {
-    public interface IRootTraderViewModelFactory
+    public interface IRootSimpleTraderViewModelFactory
     {
         ViewModelBase CreateViewModel(ViewType viewType);
     }
