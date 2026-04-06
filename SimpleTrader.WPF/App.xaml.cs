@@ -1,15 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleTrader.Domain.Models;
-using SimpleTrader.Domain.Services;
-using SimpleTrader.Domain.Services.TransactionServices;
-using SimpleTrader.EntityFramework;
-using SimpleTrader.EntityFramework.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
-using SimpleTrader.FinancialModelingPrepAPI.Services;
-using SimpleTrader.WPF.State.Navigators;
-using SimpleTrader.WPF.ViewModels;
-using SimpleTrader.WPF.ViewModels.Factories;
+using SimpleTrader.WPF.Configuracion;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Windows;
@@ -17,88 +10,67 @@ using System.Windows.Markup;
 
 namespace SimpleTrader.WPF
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
-        public static IMajorIndexService MajorIndexService { get; private set; } = null!;
+        private IServiceProvider _serviceProvider = null!;
 
-        protected override async void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
-            // Cultura
+            base.OnStartup(e);
+
+            ConfigureCulture();
+
+            var configuration = BuildConfiguration();
+            var fmpOptions = BuildFmpOptions(configuration);
+
+            _serviceProvider = new ServiceCollection()
+                .AddInfrastructure(configuration, fmpOptions)
+                .AddPresentation()
+                .BuildServiceProvider();
+
+            _serviceProvider.GetRequiredService<MainWindow>().Show();
+        }
+
+        // ── Cultura ────────────────────────────────────────────────────────────────
+
+        private static void ConfigureCulture()
+        {
             var culture = new CultureInfo("es-ES");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
-
             FrameworkElement.LanguageProperty.OverrideMetadata(
                 typeof(FrameworkElement),
-                new FrameworkPropertyMetadata(
-                    XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
+                new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
+        }
 
-            // 1. Construir configuración leyendo appsettings.json del proyecto WPF
-            var configuration = new ConfigurationBuilder()
+        // ── Configuración ──────────────────────────────────────────────────────────
+
+        private static IConfiguration BuildConfiguration() => new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
+        private static FinancialModelingPrepOptions BuildFmpOptions(IConfiguration configuration)
+        {
+            var options = configuration
+                .GetSection("FinancialModelingPrep")
+                .Get<FinancialModelingPrepOptions>() ?? new();
 
-            // 2. Mapear sección FinancialModelingPrep a las opciones
-            var fmpOptions = new FinancialModelingPrepOptions();
-            configuration.GetSection("FinancialModelingPrep").Bind(fmpOptions);
+            options.ApiKey = Environment.GetEnvironmentVariable("FMP_API_KEY")
+                ?? AbortWithError("La variable de entorno 'FMP_API_KEY' no está configurada.");
 
-            // ApiKey desde variable de entorno
-            var apiKeyFromEnv = Environment.GetEnvironmentVariable("FMP_API_KEY");
-            if (string.IsNullOrWhiteSpace(apiKeyFromEnv))
-            {
-                MessageBox.Show("La variable de entorno 'FMP_API_KEY' no está configurada.", "Error de configuración",
-                    MessageBoxButton.OK,MessageBoxImage.Error);
-
-                Shutdown();
-                return;
-            }
-            
-            fmpOptions.ApiKey = apiKeyFromEnv;
-
-            // 3.Crear servicios con DI usando las opciones
-            IServiceProvider serviceProvider = CreateServiceProvider(configuration, fmpOptions);
-            
-            // 2. Crear VM principal inyectando el servicio
-            var mainViewModel = serviceProvider.GetRequiredService<MainViewModel>();
-
-            //// 3. Crear ventana principal
-            Window window = serviceProvider.GetRequiredService<MainWindow>();
-            window.Show();
-
-            base.OnStartup(e);
+            return options;
         }
 
-        private IServiceProvider CreateServiceProvider(IConfiguration configuration, FinancialModelingPrepOptions fmpOptions)
+        // ── Helpers ───────────────────────────────────────────────────────────────
+
+        [DoesNotReturn]
+        private static string AbortWithError(string message)
         {
-            IServiceCollection services = new ServiceCollection();
-
-            services.AddSingleton<IConfiguration>(configuration);
-            services.AddSingleton<FinancialModelingPrepOptions>(fmpOptions);
-
-            services.AddSingleton<SimpleTraderDbContextFactory>();
-            services.AddSingleton<IDataService<Account>, AccountDataService>();
-            services.AddSingleton<IMajorIndexService, MajorIndexService>();
-            services.AddSingleton<IStockPriceService, StockPriceService>();
-            services.AddSingleton<IBuyStockService, BuyStockService>();
-
-            services.AddSingleton<IRootSimpleTraderViewModelFactory, RootSimpleTraderViewModelFactory>();
-            services.AddSingleton<ISimpleTraderViewModelFactory<HomeViewModel>, HomeViewModelFactory>();
-            services.AddSingleton<ISimpleTraderViewModelFactory<PortfolioViewModel>, PortfolioViewModelFactory>();
-            services.AddSingleton<ISimpleTraderViewModelFactory<MajorIndexListingViewModel>, MajorIndexListingViewModelFactory>();
-
-
-            services.AddScoped<BuyViewModel>();
-            services.AddScoped<INavigator, Navigator>();
-            services.AddScoped<MainViewModel>();
-            services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
-
-            return services.BuildServiceProvider();
+            MessageBox.Show(message, "Error de configuración",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+            Current.Shutdown();
+            throw new InvalidOperationException(message); // satisface al compilador
         }
     }
-
 }
