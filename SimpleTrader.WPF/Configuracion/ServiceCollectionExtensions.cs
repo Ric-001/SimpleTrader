@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services;
+using SimpleTrader.Domain.Services.AthenticationService;
 using SimpleTrader.Domain.Services.TransactionServices;
 using SimpleTrader.EntityFramework;
 using SimpleTrader.EntityFramework.Services;
@@ -26,6 +27,7 @@ namespace SimpleTrader.WPF.Configuracion
             services.AddSingleton<IMajorIndexService, MajorIndexService>();
             services.AddSingleton<IStockPriceService, StockPriceService>();
             services.AddSingleton<IBuyStockService, BuyStockService>();
+            services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
             return services;
         }
