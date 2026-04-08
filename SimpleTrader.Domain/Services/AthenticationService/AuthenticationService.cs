@@ -1,5 +1,4 @@
-﻿using BCrypt.Net;
-using SimpleTrader.Domain.Exceptions;
+﻿using SimpleTrader.Domain.Exceptions;
 using SimpleTrader.Domain.Models;
 using static SimpleTrader.Domain.Services.AthenticationService.IAuthenticationService;
 
