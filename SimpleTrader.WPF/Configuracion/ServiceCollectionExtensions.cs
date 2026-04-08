@@ -24,9 +24,13 @@ namespace SimpleTrader.WPF.Configuracion
 
             services.AddSingleton<SimpleTraderDbContextFactory>();
             services.AddSingleton<IDataService<Account>, AccountDataService>();
+            services.AddSingleton<IAccountService, AccountDataService>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<IMajorIndexService, MajorIndexService>();
             services.AddSingleton<IStockPriceService, StockPriceService>();
             services.AddSingleton<IBuyStockService, BuyStockService>();
+            
+            
             services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
             return services;

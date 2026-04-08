@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleTrader.Domain.Services.AthenticationService;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.WPF.Configuracion;
 using System.Diagnostics.CodeAnalysis;
@@ -28,6 +29,8 @@ namespace SimpleTrader.WPF
                 .AddPresentation()
                 .BuildServiceProvider();
 
+            IAuthenticationService authService = _serviceProvider.GetRequiredService<IAuthenticationService>();
+            authService.Login("testuser", "password123");
             _serviceProvider.GetRequiredService<MainWindow>().Show();
         }
 

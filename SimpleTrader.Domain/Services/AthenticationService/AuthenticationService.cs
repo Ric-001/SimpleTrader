@@ -1,28 +1,47 @@
-﻿using SimpleTrader.Domain.Models;
-using BCrypt.Net;
+﻿using BCrypt.Net;
+using SimpleTrader.Domain.Exceptions;
+using SimpleTrader.Domain.Models;
+using static SimpleTrader.Domain.Services.AthenticationService.IAuthenticationService;
 
 namespace SimpleTrader.Domain.Services.AthenticationService
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly IDataService<Account> _accountService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IAccountService _accountService;
 
-        public AuthenticationService(IDataService<Account> accountService, IPasswordHasher passwordHasher)
+        public AuthenticationService(IAccountService accountService, IPasswordHasher passwordHasher)
         {
             _accountService = accountService;
             _passwordHasher = passwordHasher;
         }
 
-        public Task<Account> Login(string username, string password)
+        public async Task<Account> Login(string username, string password)
         {
-            throw new NotImplementedException();
+            Account storedAccount = await _accountService.GetByUsername(username);
+            
+            bool passwordsMatch = _passwordHasher.Verify(password, storedAccount.AccountHolder.PasswordHash);
+ 
+            if (!passwordsMatch) 
+                throw new InvalidPasswordException(username, password);
+            
+            return storedAccount;
         }
 
-        public async Task<bool> Register(string email, string username, string password, string confirmPassword)
+        public async Task<RegistrationResult> Register(string email, string username, string password, string confirmPassword)
         {
             if (password != confirmPassword)
-                return false;
+                return RegistrationResult.PasswordsDoNotMatch;
+
+            Account emailAccount = await _accountService.GetByEmail(email);
+
+            if (emailAccount != null)
+                return RegistrationResult.EmailAlreadyExists;
+
+            Account usernameAccount = await _accountService.GetByUsername(username);
+            
+            if (usernameAccount != null)
+                return RegistrationResult.UsernameAlreadyExists;
 
             string hashedPassword = _passwordHasher.Hash(password);
 
@@ -31,6 +50,7 @@ namespace SimpleTrader.Domain.Services.AthenticationService
                 Email = email,
                 Username = username,
                 PasswordHash = hashedPassword,
+                DateJoined = DateTime.Now,
             };
 
             Account account = new Account()
@@ -40,7 +60,7 @@ namespace SimpleTrader.Domain.Services.AthenticationService
 
             await _accountService.Create(account);
 
-            return true;
+            return RegistrationResult.Success;
         }
     }
 }
