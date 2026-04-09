@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="SimpleTrader.Domain.Tests/SimpleTrader.Domain.Tests.csproj" Id="4299eab0-5188-4d99-bfe1-6372f277ac7e" />
   <Project Path="SimpleTrader.Domain/SimpleTrader.Domain.csproj" />
   <Project Path="SimpleTrader.EntityFramework/SimpleTrader.EntityFramework.csproj" />
   <Project Path="SimpleTrader.FinancialModelingPrepAPI/SimpleTrader.FinancialModelingPrepAPI.csproj" Id="452c0ca6-06f1-4740-9eed-c542262ebd38" />
