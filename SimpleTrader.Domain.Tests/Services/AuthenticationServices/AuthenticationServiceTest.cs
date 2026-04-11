@@ -70,8 +70,10 @@ namespace SimpleTrader.Domain.Tests.Services.AuthenticationServices
             Assert.AreEqual(expectedUsername, actualUsername);
         }
 
+        
+        
         [Test]
-        public async Task Login_WithNonExistingUserName_ThrowsInvalidPasswordExceptionForUserName()
+        public void Login_WithNonExistingUserName_ThrowsInvalidPasswordExceptionForUserName()
         {
             // Arrange
             string expectedUsername = "testuser";
