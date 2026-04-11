@@ -1,15 +1,17 @@
 ﻿using SimpleTrader.Domain.Models;
-using SimpleTrader.Domain.Services.AthenticationService;
-using static SimpleTrader.Domain.Services.AthenticationService.IAuthenticationService;
+using SimpleTrader.Domain.Services.AuthenticationService;
+using SimpleTrader.WPF.ViewModels;
+using static SimpleTrader.Domain.Services.AuthenticationService.IAuthenticationService;
 
 namespace SimpleTrader.WPF.State.Authenticators
 {
-    public class Authenticator : IAuthenticator
+    public class Authenticator : ViewModelBase, IAuthenticator
     {
         private readonly IAuthenticationService _authenticationService;
 
-
-        public Account? CurrentAccount { get; private set; } = null;
+        private Account? _currentAccount;
+        
+        public Account? CurrentAccount { get => _currentAccount; private set { SetProperty(ref _currentAccount, value); OnPropertyChanged(nameof(IsLoggedIn)); } }
 
         public bool IsLoggedIn => CurrentAccount != null;
         

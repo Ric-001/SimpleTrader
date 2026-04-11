@@ -1,4 +1,4 @@
-﻿namespace SimpleTrader.Domain.Services.AthenticationService
+﻿namespace SimpleTrader.Domain.Services.AuthenticationService
 {
     public class BcryptPasswordHasher : IPasswordHasher
     {

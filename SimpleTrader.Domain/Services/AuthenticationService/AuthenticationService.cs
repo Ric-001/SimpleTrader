@@ -1,8 +1,8 @@
 ﻿using SimpleTrader.Domain.Exceptions;
 using SimpleTrader.Domain.Models;
-using static SimpleTrader.Domain.Services.AthenticationService.IAuthenticationService;
+using static SimpleTrader.Domain.Services.AuthenticationService.IAuthenticationService;
 
-namespace SimpleTrader.Domain.Services.AthenticationService
+namespace SimpleTrader.Domain.Services.AuthenticationService
 {
     public class AuthenticationService : IAuthenticationService
     {
@@ -22,6 +22,7 @@ namespace SimpleTrader.Domain.Services.AthenticationService
             if (storedAccount == null) 
                 throw new UserNotFoundException(username);
 
+            //string passwordHashed = _passwordHasher.Hash(password);
 
             bool passwordsMatch = _passwordHasher.Verify(password, storedAccount.AccountHolder.PasswordHash);
  

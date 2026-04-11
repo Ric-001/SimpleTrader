@@ -1,4 +1,5 @@
 ﻿using SimpleTrader.Domain.Services;
+using SimpleTrader.WPF.State.Authenticators;
 using SimpleTrader.WPF.State.Navigators;
 using System;
 using System.Collections.Generic;
@@ -8,15 +9,13 @@ namespace SimpleTrader.WPF.ViewModels
 {
     internal class MainViewModel : ViewModelBase
     {
-        private readonly IMajorIndexService _majorIndexService;
-        private readonly IStockPriceService _stockService;
-        public INavigator Navigator { get; set; } 
+        public INavigator Navigator { get; set; }
+        public IAuthenticator Authenticator { get; }
 
-        public MainViewModel(IMajorIndexService majorIndexService, IStockPriceService stockService, INavigator navigator)
+        public MainViewModel(INavigator navigator, IAuthenticator authenticator)
         {
-            _majorIndexService = majorIndexService;
-            _stockService = stockService;
             Navigator = navigator;
+            Authenticator = authenticator;
             Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }
     }

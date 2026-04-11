@@ -18,9 +18,22 @@ namespace SimpleTrader.WPF.Views
     /// </summary>
     public partial class LoginView : UserControl
     {
+        public static readonly DependencyProperty LoginCommandProperty = DependencyProperty.Register(nameof(LoginCommand), typeof(ICommand), typeof(LoginView), new PropertyMetadata(null));
+        
+        public ICommand LoginCommand
+        {
+            get { return (ICommand)GetValue(LoginCommandProperty); }
+            set { SetValue(LoginCommandProperty, value); }
+        }
+
         public LoginView()
         {
             InitializeComponent();
+        }
+
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            LoginCommand?.Execute(pbPassword?.Password ?? string.Empty);
         }
     }
 }

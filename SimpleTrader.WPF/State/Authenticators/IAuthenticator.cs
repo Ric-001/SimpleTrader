@@ -1,5 +1,5 @@
 ﻿using SimpleTrader.Domain.Models;
-using static SimpleTrader.Domain.Services.AthenticationService.IAuthenticationService;
+using static SimpleTrader.Domain.Services.AuthenticationService.IAuthenticationService;
 
 namespace SimpleTrader.WPF.State.Authenticators
 {

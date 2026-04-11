@@ -25,12 +25,12 @@ namespace SimpleTrader.WPF.Commands
             return true;
         }
 
-        // Implementación explícita de ICommand.Execute (void)
-        //void ICommand.Execute(object? parameter) => _ = Execute(parameter);
-
+       
         public async void Execute(object? parameter)
         {
-            bool result = await  _authenticator.Login(_loginViewModel.Username, string.Empty);
+            bool result = await  _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
+            
+                
         }
 
         

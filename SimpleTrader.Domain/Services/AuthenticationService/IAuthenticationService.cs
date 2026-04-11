@@ -1,6 +1,6 @@
 ﻿using SimpleTrader.Domain.Models;
 
-namespace SimpleTrader.Domain.Services.AthenticationService
+namespace SimpleTrader.Domain.Services.AuthenticationService
 {
     public interface IAuthenticationService
     {

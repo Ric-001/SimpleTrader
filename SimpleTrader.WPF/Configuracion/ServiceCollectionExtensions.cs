@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services;
-using SimpleTrader.Domain.Services.AthenticationService;
+using SimpleTrader.Domain.Services.AuthenticationService;
 using SimpleTrader.Domain.Services.TransactionServices;
 using SimpleTrader.EntityFramework;
 using SimpleTrader.EntityFramework.Services;

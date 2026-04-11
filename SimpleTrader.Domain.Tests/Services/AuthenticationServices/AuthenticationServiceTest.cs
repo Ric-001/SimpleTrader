@@ -2,8 +2,8 @@
 using SimpleTrader.Domain.Exceptions;
 using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services;
-using SimpleTrader.Domain.Services.AthenticationService;
-using static SimpleTrader.Domain.Services.AthenticationService.IAuthenticationService;
+using SimpleTrader.Domain.Services.AuthenticationService;
+using static SimpleTrader.Domain.Services.AuthenticationService.IAuthenticationService;
 
 namespace SimpleTrader.Domain.Tests.Services.AuthenticationServices
 {
