@@ -8,7 +8,7 @@ using static SimpleTrader.Domain.Services.AthenticationService.IAuthenticationSe
 namespace SimpleTrader.Domain.Tests.Services.AuthenticationServices
 {
     [TestFixture]
-    internal class AthenticationServiceTest
+    internal class AuthenticationServiceTest
     {
         private Mock<IAccountService> _mockAccountService;
         private Mock<IPasswordHasher> _mockPasswordHasher;
@@ -48,7 +48,7 @@ namespace SimpleTrader.Domain.Tests.Services.AuthenticationServices
         }
 
         [Test]
-        public async Task Login_WithInCorrectPasswordForExistingUserName_ThrowsInvalidPasswordExceptionForUserName()
+        public void Login_WithIncorrectPasswordForExistingUserName_ThrowsInvalidPasswordExceptionForUserName()
         {
             // Arrange
             string expectedUsername = "testuser";
@@ -98,7 +98,7 @@ namespace SimpleTrader.Domain.Tests.Services.AuthenticationServices
             RegistrationResult expected = RegistrationResult.PasswordsDoNotMatch;
 
             // Act
-            RegistrationResult result = await _authService.Register(It.IsAny<string>(), It.IsAny<string>(), password, confirmPassword);
+            RegistrationResult result = await _authService.Register("email@example.com", "username", password, confirmPassword);
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -114,7 +114,7 @@ namespace SimpleTrader.Domain.Tests.Services.AuthenticationServices
             RegistrationResult expected = RegistrationResult.EmailAlreadyExists;
 
             // Act
-            RegistrationResult result = await _authService.Register(email, It.IsAny<string>(), "password", "password");
+            RegistrationResult result = await _authService.Register(email, "username", "password", "password");
 
             // Assert
             Assert.AreEqual(expected, result);
@@ -129,7 +129,7 @@ namespace SimpleTrader.Domain.Tests.Services.AuthenticationServices
             RegistrationResult expected = RegistrationResult.UsernameAlreadyExists;
 
             // Act
-            RegistrationResult result = await _authService.Register(It.IsAny<string>(), username, "password", "password");
+            RegistrationResult result = await _authService.Register("email@example.com", username, "password", "password");
             // Assert
             Assert.AreEqual(expected, result);
         }
@@ -141,7 +141,7 @@ namespace SimpleTrader.Domain.Tests.Services.AuthenticationServices
             RegistrationResult expected = RegistrationResult.Success;
 
             // Act
-            RegistrationResult result = await _authService.Register(It.IsAny<string>(), It.IsAny<string>(), "password", "password");
+            RegistrationResult result = await _authService.Register("email@example.com", "username", "password", "password");
             // Assert
             Assert.AreEqual(expected, result);
         }
