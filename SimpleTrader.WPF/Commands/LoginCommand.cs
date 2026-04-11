@@ -1,0 +1,38 @@
+﻿using SimpleTrader.WPF.State.Authenticators;
+using SimpleTrader.WPF.ViewModels;
+using System.Windows.Input;
+
+namespace SimpleTrader.WPF.Commands
+{
+    public class LoginCommand : ICommand
+    {
+        public event EventHandler? CanExecuteChanged;
+
+        private readonly LoginViewModel _loginViewModel;
+        private readonly IAuthenticator _authenticator;
+
+        public LoginCommand(LoginViewModel loginViewModel, IAuthenticator authenticator)
+        {
+            _authenticator = authenticator;
+            _loginViewModel = loginViewModel;
+        }
+
+
+
+
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
+
+        // Implementación explícita de ICommand.Execute (void)
+        //void ICommand.Execute(object? parameter) => _ = Execute(parameter);
+
+        public async void Execute(object? parameter)
+        {
+            bool result = await  _authenticator.Login(_loginViewModel.Username, string.Empty);
+        }
+
+        
+    }
+}

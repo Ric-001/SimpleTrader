@@ -34,4 +34,4 @@ namespace SimpleTrader.WPF.Commands
         }
     }
 
-}
+    }

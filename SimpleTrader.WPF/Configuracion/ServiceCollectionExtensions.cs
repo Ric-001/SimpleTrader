@@ -8,6 +8,7 @@ using SimpleTrader.EntityFramework;
 using SimpleTrader.EntityFramework.Services;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.FinancialModelingPrepAPI.Services;
+using SimpleTrader.WPF.State.Authenticators;
 using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
 using SimpleTrader.WPF.ViewModels.Factories;
@@ -30,7 +31,6 @@ namespace SimpleTrader.WPF.Configuracion
             services.AddSingleton<IStockPriceService, StockPriceService>();
             services.AddSingleton<IBuyStockService, BuyStockService>();
             
-            
             services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
             return services;
@@ -38,7 +38,9 @@ namespace SimpleTrader.WPF.Configuracion
 
         internal static IServiceCollection AddPresentation(this IServiceCollection services)
         {
+            services.AddSingleton<IAuthenticator, Authenticator>();
             services.AddSingleton<IRootSimpleTraderViewModelFactory, RootSimpleTraderViewModelFactory>();
+            services.AddSingleton<ISimpleTraderViewModelFactory<LoginViewModel>, LoginViewModelFactory>();
             services.AddSingleton<ISimpleTraderViewModelFactory<HomeViewModel>, HomeViewModelFactory>();
             services.AddSingleton<ISimpleTraderViewModelFactory<PortfolioViewModel>, PortfolioViewModelFactory>();
             services.AddSingleton<ISimpleTraderViewModelFactory<MajorIndexListingViewModel>, MajorIndexListingViewModelFactory>();

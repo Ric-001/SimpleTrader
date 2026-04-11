@@ -8,6 +8,7 @@ namespace SimpleTrader.WPF.State.Navigators
 {
     public enum ViewType
     {
+        Login,
         Home,
         Portfolio,
         Buy,
@@ -15,7 +16,7 @@ namespace SimpleTrader.WPF.State.Navigators
 
     public interface INavigator
     {
-        ViewModelBase CurrentViewModel { get; set; }
+        ViewModelBase? CurrentViewModel { get; set; }
         ICommand UpdateCurrentViewModelCommand { get; }
     }
 }

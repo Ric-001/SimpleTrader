@@ -17,7 +17,7 @@ namespace SimpleTrader.WPF.ViewModels
             _majorIndexService = majorIndexService;
             _stockService = stockService;
             Navigator = navigator;
-            Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Home);
+            Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }
     }
 }
