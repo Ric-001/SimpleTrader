@@ -19,6 +19,9 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="1" BorderBrush="{StaticResource BrushPrimary2}" BorderThickness="3" Margin="20" Padding="30" HorizontalAlignment="Center" CornerRadius="5" Background="White">
+            <Border.Effect>
+                <DropShadowEffect Color="Gray" BlurRadius="10"/>
+            </Border.Effect>
             <StackPanel>
                 <TextBlock Text="Simple Trader" HorizontalAlignment="Center" FontSize="40" Foreground="{StaticResource BrushPrimary3}" Margin="0 10"/>
                 <TextBlock Text="The world's simplest stock trading application." HorizontalAlignment="Center" FontSize="18" FontWeight="Thin" Foreground="{StaticResource BrushPrimary3}"/>
@@ -43,7 +46,7 @@
                         <PasswordBox x:Name="pbPassword" Grid.Column="1" Width="200"/>
                     </StackPanel>
 
-                    <Button Content="Login" Grid.Row="2" Grid.Column="0" Click="Login_Click" Margin="15" HorizontalAlignment="Center"/>
+                    <Button Content="Login" Grid.Row="2" Grid.Column="0" Click="Login_Click" Margin="15" HorizontalAlignment="Center" IsDefault="True"/>
                 </Grid>
             </StackPanel>
         </Border>

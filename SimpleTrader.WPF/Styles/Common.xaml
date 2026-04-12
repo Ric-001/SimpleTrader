@@ -12,10 +12,10 @@
     <SolidColorBrush x:Key="BrushPrimary3" Color="{StaticResource ColorPrimary3}"/>
     
     <!--Text Boxes-->
-    <Style TargetType="TextBox">
+    <Style x:Key="TextBoxBase" TargetType="Control">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="TextBox">
+                <ControlTemplate TargetType="Control">
                     <Border 
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
@@ -43,7 +43,13 @@
         <Setter Property="Padding" Value="4,3"/>
         <Setter Property="FontSize" Value="13"/>
     </Style>
-    
+
+    <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxBase}"/>
+    <Style TargetType="PasswordBox" BasedOn="{StaticResource TextBoxBase}"/>
+
+
+
+
     <!--Botones-->
     <Style TargetType="Button">
         <Setter Property="Background" Value="{StaticResource BrushPrimary2}"/>
