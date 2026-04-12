@@ -6,6 +6,8 @@ using System.Text;
 
 namespace SimpleTrader.WPF.ViewModels
 {
+    public delegate TViewModel CreateViewModel<TViewModel>() where TViewModel : ViewModelBase;
+
     public class ViewModelBase : ObservableModel
     {
         protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = "")

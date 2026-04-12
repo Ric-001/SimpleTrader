@@ -38,19 +38,41 @@ namespace SimpleTrader.WPF.Configuracion
 
         internal static IServiceCollection AddPresentation(this IServiceCollection services)
         {
-            services.AddSingleton<IAuthenticator, Authenticator>();
-            services.AddSingleton<IRootSimpleTraderViewModelFactory, RootSimpleTraderViewModelFactory>();
-            services.AddSingleton<ISimpleTraderViewModelFactory<HomeViewModel>, HomeViewModelFactory>();
-            services.AddSingleton<ISimpleTraderViewModelFactory<PortfolioViewModel>, PortfolioViewModelFactory>();
-            services.AddSingleton<ISimpleTraderViewModelFactory<MajorIndexListingViewModel>, MajorIndexListingViewModelFactory>();
             
-            services.AddSingleton<ISimpleTraderViewModelFactory<LoginViewModel>>(services => 
-                new LoginViewModelFactory(services.GetRequiredService<IAuthenticator>(),
-                new ViewModelFactoryRenavigator<HomeViewModel>(services.GetRequiredService<INavigator>(),
-                services.GetRequiredService<ISimpleTraderViewModelFactory<HomeViewModel>>())));
+            services.AddSingleton<ISimpleTraderViewModelFactory, SimpleTraderViewModelFactory>();
+            services.AddSingleton<BuyViewModel>();
+            services.AddSingleton<PortfolioViewModel>();
+            services.AddSingleton<LoginViewModel>();
+            services.AddSingleton<HomeViewModel>(services => new HomeViewModel(
+                MajorIndexListingViewModel.LoadMajorIndexViewModel(services.GetRequiredService<IMajorIndexService>())));
 
-            services.AddScoped<BuyViewModel>();
+            
+            services.AddScoped<CreateViewModel<HomeViewModel>>(services =>
+            {
+                return () => services.GetRequiredService<HomeViewModel>();
+            });
+
+            services.AddSingleton<CreateViewModel<BuyViewModel>>(services =>
+            {
+                return () => services.GetRequiredService<BuyViewModel>();
+            });
+
+            services.AddSingleton<ViewModelDelegateRenavigator<HomeViewModel>>();
+
+            services.AddSingleton<CreateViewModel<PortfolioViewModel>>(services =>
+            {
+                return () => services.GetRequiredService<PortfolioViewModel>();
+            });
+
+            services.AddSingleton<CreateViewModel<LoginViewModel>>(services =>
+            {
+                return () => new LoginViewModel(
+                    services.GetRequiredService<IAuthenticator>(),
+                    services.GetRequiredService<ViewModelDelegateRenavigator<HomeViewModel>>());
+            });
+
             services.AddScoped<INavigator, Navigator>();
+            services.AddSingleton<IAuthenticator, Authenticator>();
             services.AddScoped<MainViewModel>();
             services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
 
