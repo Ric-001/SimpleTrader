@@ -8,20 +8,16 @@ using System.Windows.Input;
 
 namespace SimpleTrader.WPF.State.Navigators
 {
-    public class Navigator : ObservableModel, INavigator
+    public class Navigator : INavigator
     {
+        public event Action StateChanged;
         
         private ViewModelBase? _currentViewModel;
 
 
         public ViewModelBase? CurrentViewModel
         {
-            get => _currentViewModel;
-            set { _currentViewModel = value; OnPropertyChanged(nameof(CurrentViewModel)); }
+            get => _currentViewModel; set { _currentViewModel = value; StateChanged?.Invoke(); }
         }
-        
-       
-
-
     }
 }

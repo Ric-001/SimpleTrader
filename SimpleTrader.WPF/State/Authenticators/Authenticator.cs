@@ -1,25 +1,42 @@
 ﻿using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services.AuthenticationService;
+using SimpleTrader.WPF.State.Accounts;
 using SimpleTrader.WPF.ViewModels;
 using static SimpleTrader.Domain.Services.AuthenticationService.IAuthenticationService;
 
 namespace SimpleTrader.WPF.State.Authenticators
 {
-    public class Authenticator : ViewModelBase, IAuthenticator
+    public class Authenticator : IAuthenticator
     {
-        private readonly IAuthenticationService _authenticationService;
+        public event Action StateChanged;
 
-        private Account? _currentAccount;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly IAccountStore _accountStore;
+
         
-        public Account? CurrentAccount { get => _currentAccount; private set { SetProperty(ref _currentAccount, value); OnPropertyChanged(nameof(IsLoggedIn)); } }
+        public Account? CurrentAccount 
+        { 
+            get => _accountStore.CurrentAccount; 
+            private set 
+            {
+                if (value != null)
+                {
+                    _accountStore.CurrentAccount = value;
+                    StateChanged?.Invoke();
+                }
+            } 
+        }
 
         public bool IsLoggedIn => CurrentAccount != null;
         
         
-        public Authenticator(IAuthenticationService authenticationService)
+        public Authenticator(IAuthenticationService authenticationService, IAccountStore accountStore)
         {
             _authenticationService = authenticationService;
+            _accountStore = accountStore;
         }
+
+        
 
         public async Task<bool> Login(string username, string password)
         {

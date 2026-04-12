@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         Icon="/Resources/Icons/SimpleTrader.ico"
-        Title="Simple Trader" Height="520" Width="800">
+        Title="Simple Trader" Height="600" Width="900">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
@@ -20,11 +20,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Visibility="{Binding Authenticator.IsLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}">
+        <Grid Grid.Row="0" Visibility="{Binding IsLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}">
             <controls:NavigationBar />
         </Grid>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ContentControl  Content="{Binding Navigator.CurrentViewModel}"/>
+            <ContentControl  Content="{Binding CurrentViewModel}"/>
         </ScrollViewer>
 
     </Grid>
