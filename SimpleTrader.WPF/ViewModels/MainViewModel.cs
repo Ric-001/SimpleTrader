@@ -1,9 +1,12 @@
 ﻿using SimpleTrader.Domain.Services;
+using SimpleTrader.WPF.Commands;
 using SimpleTrader.WPF.State.Authenticators;
 using SimpleTrader.WPF.State.Navigators;
+using SimpleTrader.WPF.ViewModels.Factories;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 
 namespace SimpleTrader.WPF.ViewModels
 {
@@ -11,12 +14,15 @@ namespace SimpleTrader.WPF.ViewModels
     {
         public INavigator Navigator { get; set; }
         public IAuthenticator Authenticator { get; }
+        public ICommand UpdateCurrentViewModelCommand { get; }
 
-        public MainViewModel(INavigator navigator, IAuthenticator authenticator)
+        public MainViewModel(INavigator navigator, IRootSimpleTraderViewModelFactory rootSimpleTraderViewModelFactory, IAuthenticator authenticator)
         {
             Navigator = navigator;
             Authenticator = authenticator;
-            Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Login);
+            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(Navigator, rootSimpleTraderViewModelFactory);
+            
+            UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }
     }
 }

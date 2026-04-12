@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Visibility="{Binding Authenticator.IsLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}">
-            <controls:NavigationBar  DataContext="{Binding Navigator}" />
+            <controls:NavigationBar />
         </Grid>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ContentControl  Content="{Binding Navigator.CurrentViewModel}"/>

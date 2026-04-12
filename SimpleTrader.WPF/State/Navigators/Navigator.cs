@@ -20,15 +20,7 @@ namespace SimpleTrader.WPF.State.Navigators
             set { _currentViewModel = value; OnPropertyChanged(nameof(CurrentViewModel)); }
         }
         
-        public ICommand UpdateCurrentViewModelCommand { get; init; } 
-
-
-        public Navigator(IRootSimpleTraderViewModelFactory viewModelFactory)
-        {
-            // Inyectamos el servicio y creamos el comando UNA VEZ
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this, viewModelFactory);
-        }
-
+       
 
 
     }
