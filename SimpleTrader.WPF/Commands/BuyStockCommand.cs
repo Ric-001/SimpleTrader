@@ -23,15 +23,22 @@ namespace SimpleTrader.WPF.Commands
 
         public bool CanExecute(object? parameter)
         {
-            return true;
+            return _accountStore.CurrentAccount != null;
         }
 
         public async void Execute(object? parameter)
         {
             try
             {
+                Account? currentAccount = _accountStore.CurrentAccount;
+
+                if (currentAccount == null)
+                    return;
+
                 Account account = await _buyStockService.BuyStock(_accountStore.CurrentAccount, _viewModel.Symbol, _viewModel.SharesToBuy);
                 _accountStore.CurrentAccount = account;
+
+                MessageBox.Show("Compra realizada");
             }
             catch (Exception ex)
             {

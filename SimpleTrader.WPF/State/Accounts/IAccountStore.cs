@@ -7,6 +7,7 @@ namespace SimpleTrader.WPF.State.Accounts
 {
     public interface IAccountStore
     {
+        event Action StateChanged;
         Account? CurrentAccount { get; set; }
     }
 }
