@@ -6,14 +6,14 @@
         <Setter Property="Background" Value="{StaticResource BrushPrimary2}"/>
         <Setter Property="Padding" Value="10 5"/>
         <Setter Property="FontSize" Value="18"/>
-        <!--<Setter Property="Background" Value="{StaticResource BrushPrimary2}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource BrushPrimary2}"/>
-        <Setter Property="BorderThickness" Value="0"/>-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Grid x:Name="PART_Grid" Background="{TemplateBinding Background}">
-                        <TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}">
+                            <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center"/>
+                            <Image Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" Width="44" Height="44" Margin="8 0 0 0" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
