@@ -29,8 +29,8 @@ namespace SimpleTrader.WPF
                 .AddPresentation()
                 .BuildServiceProvider();
 
-            IAuthenticationService authService = _serviceProvider.GetRequiredService<IAuthenticationService>();
-            authService.Login("testuser", "password123");
+            //IAuthenticationService authService = _serviceProvider.GetRequiredService<IAuthenticationService>();
+            //authService.Login("testuser", "password123");
             _serviceProvider.GetRequiredService<MainWindow>().Show();
         }
 
