@@ -31,16 +31,16 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <RadioButton Grid.Column="0" Content="Home" Command="{Binding UpdateCurrentViewModelCommand}" Tag="/Resources/Icons/Inicio_256.png"
+            <RadioButton Grid.Column="0" Content="Inicio" Command="{Binding UpdateCurrentViewModelCommand}" Tag="/Resources/Icons/Inicio_256.png"
                          IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter={x:Type vm:HomeViewModel}}" 
                          CommandParameter="{x:Static nav:ViewType.Home}"/>
-            <RadioButton Grid.Column="1" Content="Portfolio" Command="{Binding UpdateCurrentViewModelCommand}" Tag="/Resources/Icons/Inicio_256.png"
+            <RadioButton Grid.Column="1" Content="Cartera" Command="{Binding UpdateCurrentViewModelCommand}" Tag="/Resources/Icons/Cartera.png"
                          IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource EqualityToBooleanConverter},ConverterParameter={x:Type vm:PortfolioViewModel}}" 
                          CommandParameter="{x:Static nav:ViewType.Portfolio}"/>
-            <RadioButton Grid.Column="2" Content="Buy" Command="{Binding UpdateCurrentViewModelCommand}" Tag="/Resources/Icons/Inicio_256.png"
+            <RadioButton Grid.Column="2" Content="Compra" Command="{Binding UpdateCurrentViewModelCommand}" Tag="/Resources/Icons/Compra.png"
                          IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource EqualityToBooleanConverter},ConverterParameter={x:Type vm:BuyViewModel}}" 
                          CommandParameter="{x:Static nav:ViewType.Buy}"/>
-            <RadioButton Grid.Column="3" Content="Sell" Tag="/Resources/Icons/Inicio_256.png"/>
+            <RadioButton Grid.Column="3" Content="Venta" Tag="/Resources/Icons/Venta.png"/>
         </Grid>
     </Grid>
 </UserControl>
