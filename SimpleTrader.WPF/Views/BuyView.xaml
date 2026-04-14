@@ -50,7 +50,7 @@
                     </WrapPanel>
                     <WrapPanel Margin="0 10">
                         <TextBlock Text="Precio por acción:" Width="150" />
-                        <TextBlock Text="{Binding StockPrice, StringFormat=C}" />
+                        <TextBlock Text="{Binding StockPrice, StringFormat={}{0:C}, FallbackValue='0,00€'}" />
                     </WrapPanel>
                     <TextBlock Margin="0 10" Text="{Binding TotalPrice, StringFormat=C}" FontSize="32"  HorizontalAlignment="Center"/>
                     <Button Content="Comprar" Command="{Binding BuyStockCommand}" FontSize="18" Margin="0 10 0 0" Padding="20 6"/>

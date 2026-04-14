@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         Icon="/Resources/Icons/SimpleTrader.ico"
-        Title="Simple Trader" Height="600" Width="900">
+        Title="Simple Trader" Height="600" Width="900" MinWidth="600" MinHeight="400">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>

@@ -31,7 +31,8 @@ namespace SimpleTrader.WPF.Commands
        
         public async void Execute(object? parameter)
         {
-            bool result = await  _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
+            //bool result = await  _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
+            bool result = await _authenticator.Login("test", "test");
 
             if (result) 
             { 
