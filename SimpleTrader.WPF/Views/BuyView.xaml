@@ -15,14 +15,15 @@
     <Grid Margin="20" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <WrapPanel HorizontalAlignment="Center">
             <TextBox Text="{Binding Symbol, UpdateSourceTrigger=PropertyChanged}" Width="100" CharacterCasing="Upper"/>
             <Button Margin="10 0 0 0" Content="Buscar" Command="{Binding SearchSymbolCommand}" />
         </WrapPanel>
-
-        <Grid Margin="0 20 0 0" Grid.Row="1" MaxHeight="400" MaxWidth="450" VerticalAlignment="Top">
+        <TextBlock Grid.Row="1" Margin="0 20 0 0" Text="{Binding ErrorMessage}" Foreground="DarkRed" HorizontalAlignment="Center"/>
+        <Grid Margin="0 20 0 0" Grid.Row="2" MaxHeight="400" MaxWidth="450" VerticalAlignment="Top">
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>

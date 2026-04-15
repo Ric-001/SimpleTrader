@@ -45,7 +45,8 @@ namespace SimpleTrader.WPF.Commands
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al comprar acciones: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _viewModel.ErrorMessage = ex.Message;
+                //MessageBox.Show($"Error al comprar acciones: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     } 

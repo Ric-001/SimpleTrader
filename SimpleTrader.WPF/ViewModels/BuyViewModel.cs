@@ -12,12 +12,15 @@ namespace SimpleTrader.WPF.ViewModels
         private string _searchResultSymbol = string.Empty;
         private double _stockPrice = 0;
         private int _sharesToBuy = 0;
+        private string _errorMessage = string.Empty;
 
         public string Symbol { get => _symbol; set => SetProperty(ref _symbol, value); }
         public string SearchResultSymbol { get => _searchResultSymbol; set => SetProperty(ref _searchResultSymbol, value); }
         public double StockPrice { get => _stockPrice; set { SetProperty(ref _stockPrice, value); OnPropertyChanged(nameof(TotalPrice)); } }
         public int SharesToBuy { get => _sharesToBuy; set { SetProperty(ref _sharesToBuy, value); OnPropertyChanged(nameof(TotalPrice)); } }
+        public string ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value); }
         public double TotalPrice => StockPrice * SharesToBuy;
+        public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
         public ICommand SearchSymbolCommand { get; set; }
         public ICommand BuyStockCommand { get; set; }
