@@ -18,7 +18,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <WrapPanel HorizontalAlignment="Center">
-            <TextBox Text="{Binding Symbol, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+            <TextBox Text="{Binding Symbol, UpdateSourceTrigger=PropertyChanged}" Width="100" CharacterCasing="Upper"/>
             <Button Margin="10 0 0 0" Content="Buscar" Command="{Binding SearchSymbolCommand}" />
         </WrapPanel>
 
