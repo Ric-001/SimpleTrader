@@ -41,7 +41,7 @@ namespace SimpleTrader.WPF.Commands
                 Account? account = await _buyStockService.BuyStock(currentAccount, _viewModel.Symbol, _viewModel.SharesToBuy);
                 _accountStore.CurrentAccount = account;
 
-                MessageBox.Show("Compra realizada");
+                _viewModel.StatusMessage = $"Compra realizada {_viewModel.SharesToBuy} acciones de {_viewModel.Symbol} por un total de {_viewModel.TotalPrice:F2}€.";
             }
             catch (Exception ex)
             {

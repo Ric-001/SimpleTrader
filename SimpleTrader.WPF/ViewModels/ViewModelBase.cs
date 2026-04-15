@@ -27,5 +27,16 @@ namespace SimpleTrader.WPF.ViewModels
             OnPropertyChanged(propertyName);
             return true;
         }
+
+        protected bool SetProperty<T>(ref T field, T value, string[] dependentPropertyNames, [CallerMemberName] string propertyName = "")
+        {
+            if (!SetProperty(ref field, value, propertyName))
+                return false;
+
+            foreach (string dependent in dependentPropertyNames)
+                OnPropertyChanged(dependent);
+
+            return true;
+        }
     }
 }

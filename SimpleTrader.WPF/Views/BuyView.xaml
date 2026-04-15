@@ -11,9 +11,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <conv:EmptyStringToZeroConverter x:Key="EmptyStringToZeroConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid Margin="20" >
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -22,8 +24,14 @@
             <TextBox Text="{Binding Symbol, UpdateSourceTrigger=PropertyChanged}" Width="100" CharacterCasing="Upper"/>
             <Button Margin="10 0 0 0" Content="Buscar" Command="{Binding SearchSymbolCommand}" />
         </WrapPanel>
-        <TextBlock Grid.Row="1" Margin="0 20 0 0" Text="{Binding ErrorMessage}" Foreground="DarkRed" HorizontalAlignment="Center"/>
-        <Grid Margin="0 20 0 0" Grid.Row="2" MaxHeight="400" MaxWidth="450" VerticalAlignment="Top">
+        
+        <TextBlock Grid.Row="1" Margin="0 20 0 0" Text="{Binding StatusMessageViewModel.Message}" Foreground="DarkGreen" HorizontalAlignment="Center" 
+                   Visibility="{Binding StatusMessageViewModel.HasMessage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        
+        <TextBlock Grid.Row="2" Margin="0 20 0 0" Text="{Binding ErrorMessageViewModel.Message}" Foreground="DarkRed" HorizontalAlignment="Center" 
+           Visibility="{Binding ErrorMessageViewModel.HasMessage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        
+        <Grid Margin="0 20 0 0" Grid.Row="3" MaxHeight="400" MaxWidth="450" VerticalAlignment="Top">
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>
