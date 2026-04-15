@@ -10,9 +10,15 @@ namespace SimpleTrader.WPF.Commands
 {
     internal class UpdateCurrentViewModelCommand : ICommand
     {
-        public event EventHandler? CanExecuteChanged;
         private readonly INavigator _navigator;
         private readonly ISimpleTraderViewModelFactory _viewModelFactory;
+
+        public event EventHandler? CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
+
         
         public UpdateCurrentViewModelCommand(INavigator navigator, ISimpleTraderViewModelFactory viewModelFactory)
         {

@@ -7,11 +7,15 @@ namespace SimpleTrader.WPF.Commands
 {
     public class LoginCommand : ICommand
     {
-        public event EventHandler? CanExecuteChanged;
-
         private readonly LoginViewModel _loginViewModel;
         private readonly IAuthenticator _authenticator;
         private readonly IRenavigator _renavigator;
+        
+        public event EventHandler? CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
 
         public LoginCommand(LoginViewModel loginViewModel, IAuthenticator authenticator, IRenavigator renavigator)
         {

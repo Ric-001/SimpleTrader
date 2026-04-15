@@ -9,7 +9,7 @@ namespace SimpleTrader.WPF.State.Navigators
 {
     public class Navigator : INavigator
     {
-        public event Action StateChanged;
+        public event Action? StateChanged;
         
         private ViewModelBase? _currentViewModel;
 

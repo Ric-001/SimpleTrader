@@ -17,7 +17,7 @@ namespace SimpleTrader.Domain.Services.AuthenticationService
 
         public async Task<Account> Login(string username, string password)
         {
-            Account storedAccount = await _accountService.GetByUsername(username);
+            Account? storedAccount = await _accountService.GetByUsername(username);
             
             if (storedAccount == null) 
                 throw new UserNotFoundException(username);
@@ -37,12 +37,12 @@ namespace SimpleTrader.Domain.Services.AuthenticationService
             if (password != confirmPassword)
                 return RegistrationResult.PasswordsDoNotMatch;
 
-            Account emailAccount = await _accountService.GetByEmail(email);
+            Account? emailAccount = await _accountService.GetByEmail(email);
 
             if (emailAccount != null)
                 return RegistrationResult.EmailAlreadyExists;
 
-            Account usernameAccount = await _accountService.GetByUsername(username);
+            Account? usernameAccount = await _accountService.GetByUsername(username);
             
             if (usernameAccount != null)
                 return RegistrationResult.UsernameAlreadyExists;

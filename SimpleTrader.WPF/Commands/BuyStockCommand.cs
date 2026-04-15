@@ -9,7 +9,11 @@ namespace SimpleTrader.WPF.Commands
 {
     internal class BuyStockCommand : ICommand
     {
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
 
         private readonly BuyViewModel _viewModel;
         private readonly IBuyStockService _buyStockService;
@@ -35,7 +39,7 @@ namespace SimpleTrader.WPF.Commands
                 if (currentAccount == null)
                     return;
 
-                Account account = await _buyStockService.BuyStock(_accountStore.CurrentAccount, _viewModel.Symbol, _viewModel.SharesToBuy);
+                Account? account = await _buyStockService.BuyStock(_accountStore.CurrentAccount, _viewModel.Symbol, _viewModel.SharesToBuy);
                 _accountStore.CurrentAccount = account;
 
                 MessageBox.Show("Compra realizada");

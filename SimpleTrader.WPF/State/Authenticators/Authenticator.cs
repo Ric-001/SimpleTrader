@@ -7,7 +7,7 @@ namespace SimpleTrader.WPF.State.Authenticators
 {
     public class Authenticator : IAuthenticator
     {
-        public event Action StateChanged;
+        public event Action? StateChanged;
 
         private readonly IAuthenticationService _authenticationService;
         private readonly IAccountStore _accountStore;

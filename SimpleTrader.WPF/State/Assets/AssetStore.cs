@@ -8,7 +8,7 @@ namespace SimpleTrader.WPF.State.Assets
 {
     public class AssetStore
     {
-        public event Action StateChanged;
+        public event Action? StateChanged;
 
         private readonly IAccountStore _accountStore;
 
