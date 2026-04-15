@@ -36,10 +36,9 @@ namespace SimpleTrader.WPF.Commands
             {
                 Account? currentAccount = _accountStore.CurrentAccount;
 
-                if (currentAccount == null)
-                    return;
+                if (currentAccount == null) return;
 
-                Account? account = await _buyStockService.BuyStock(_accountStore.CurrentAccount, _viewModel.Symbol, _viewModel.SharesToBuy);
+                Account? account = await _buyStockService.BuyStock(currentAccount, _viewModel.Symbol, _viewModel.SharesToBuy);
                 _accountStore.CurrentAccount = account;
 
                 MessageBox.Show("Compra realizada");
