@@ -29,6 +29,9 @@ namespace SimpleTrader.WPF.Views
         public LoginView()
         {
             InitializeComponent();
+#if DEBUG
+            pbPassword.Password = "test";
+#endif
         }
 
         private void Login_Click(object sender, RoutedEventArgs e)

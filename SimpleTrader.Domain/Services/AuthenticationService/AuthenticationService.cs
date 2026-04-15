@@ -22,7 +22,7 @@ namespace SimpleTrader.Domain.Services.AuthenticationService
             if (storedAccount == null) 
                 throw new UserNotFoundException(username);
 
-            //string passwordHashed = _passwordHasher.Hash(password);
+            string passwordHashed = _passwordHasher.Hash(password);
 
             bool passwordsMatch = _passwordHasher.Verify(password, storedAccount.AccountHolder.PasswordHash);
  

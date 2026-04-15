@@ -1,7 +1,6 @@
 ﻿using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services.AuthenticationService;
 using SimpleTrader.WPF.State.Accounts;
-using SimpleTrader.WPF.ViewModels;
 using static SimpleTrader.Domain.Services.AuthenticationService.IAuthenticationService;
 
 namespace SimpleTrader.WPF.State.Authenticators

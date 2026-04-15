@@ -9,7 +9,7 @@ namespace SimpleTrader.WPF.ViewModels
     {
         private readonly IAuthenticator _authenticator;
         
-        private string _username = string.Empty;
+        private string _username = "test";
         public string Username { get => _username; set => SetProperty(ref _username, value); }
         
         public ICommand LoginCommand { get; }
