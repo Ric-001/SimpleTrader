@@ -1,4 +1,5 @@
-﻿using SimpleTrader.WPF.State.Authenticators;
+﻿using SimpleTrader.Domain.Exceptions;
+using SimpleTrader.WPF.State.Authenticators;
 using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
 using System.Windows.Input;
@@ -37,15 +38,20 @@ namespace SimpleTrader.WPF.Commands
         {
             try
             {
-                bool result = await _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
-
-                if (result)
-                    _renavigator.Renavigate();
+                await _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
+                _renavigator.Renavigate();
             }
-            
+            catch (UserNotFoundException)
+            {
+                _loginViewModel.ErrorMessage = "El usuario no existe.";
+            }
+            catch (InvalidPasswordException)
+            {
+                _loginViewModel.ErrorMessage = "Contraseña incorrecta.";
+            }
             catch (Exception ex)
             {
-                //_loginViewModel.ErrorMessage = ex.Message;
+                _loginViewModel.ErrorMessage = "No se ha podido registrar al usuario.";
             }
         }
 

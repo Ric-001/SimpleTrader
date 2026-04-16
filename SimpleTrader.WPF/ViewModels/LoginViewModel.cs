@@ -11,7 +11,10 @@ namespace SimpleTrader.WPF.ViewModels
         
         private string _username = "test";
         public string Username { get => _username; set => SetProperty(ref _username, value); }
-        
+
+        public MessageViewModel ErrorMessageViewModel { get; } = new();
+        public string ErrorMessage { set => ErrorMessageViewModel.Message = value; }
+
         public ICommand LoginCommand { get; }
 
 
