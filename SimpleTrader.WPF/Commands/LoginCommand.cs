@@ -35,12 +35,18 @@ namespace SimpleTrader.WPF.Commands
        
         public async void Execute(object? parameter)
         {
-            bool result = await  _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
+            try
+            {
+                bool result = await _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
+
+                if (result)
+                    _renavigator.Renavigate();
+            }
             
-            if (result) 
-                _renavigator.Renavigate();
-            
-            
+            catch (Exception ex)
+            {
+                //_loginViewModel.ErrorMessage = ex.Message;
+            }
         }
 
         

@@ -39,8 +39,15 @@ namespace SimpleTrader.WPF
         private static void ConfigureCulture()
         {
             var culture = new CultureInfo("es-ES");
+            
+            // Hilo principal
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
+
+            // Todos los hilos nuevos (ThreadPool, async/await, etc.)
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
             FrameworkElement.LanguageProperty.OverrideMetadata(
                 typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(culture.IetfLanguageTag)));

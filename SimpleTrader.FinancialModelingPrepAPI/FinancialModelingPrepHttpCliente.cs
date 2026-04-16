@@ -1,4 +1,5 @@
-﻿using SimpleTrader.FinancialModelingPrepAPI.Options;
+﻿using SimpleTrader.Domain.Exceptions;
+using SimpleTrader.FinancialModelingPrepAPI.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,7 +29,10 @@ namespace SimpleTrader.FinancialModelingPrepAPI
             HttpResponseMessage response = await GetAsync(uri);
             response.EnsureSuccessStatusCode();
             string jsonResponse = await response.Content.ReadAsStringAsync();
-            
+
+            if (string.IsNullOrWhiteSpace(jsonResponse) || jsonResponse.Trim() == "[]")
+                throw new InvalidSymbolException(symbol, $"El símbolo '{symbol}' no es válido o no existe.");
+
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -38,6 +42,7 @@ namespace SimpleTrader.FinancialModelingPrepAPI
 
             try
             {
+                
                 result = JsonSerializer.Deserialize<List<T>>(jsonResponse, options);
             }
             catch (Exception ex)

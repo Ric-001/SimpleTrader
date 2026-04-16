@@ -1,4 +1,5 @@
-﻿using SimpleTrader.Domain.Models;
+﻿using SimpleTrader.Domain.Exceptions;
+using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Services.TransactionServices;
 using SimpleTrader.WPF.State.Accounts;
 using SimpleTrader.WPF.ViewModels;
@@ -32,22 +33,32 @@ namespace SimpleTrader.WPF.Commands
 
         public async void Execute(object? parameter)
         {
+            _viewModel.ErrorMessage = string.Empty;
+            _viewModel.StatusMessage = string.Empty;
+
+            Account ? currentAccount = _accountStore.CurrentAccount;
+            if (currentAccount == null) return;
+            
             try
             {
-                Account? currentAccount = _accountStore.CurrentAccount;
-
-                if (currentAccount == null) return;
-
                 Account? account = await _buyStockService.BuyStock(currentAccount, _viewModel.Symbol, _viewModel.SharesToBuy);
                 _accountStore.CurrentAccount = account;
 
-                _viewModel.StatusMessage = $"Compra realizada {_viewModel.SharesToBuy} acciones de {_viewModel.Symbol} por un total de {_viewModel.TotalPrice:F2}€.";
+                _viewModel.StatusMessage = $"Compra realizada {_viewModel.SharesToBuy} acciones de {_viewModel.Symbol} por un total de {_viewModel.TotalPrice:N2}€.";
             }
+            catch (InsufficientFundsException)
+            {
+                _viewModel.ErrorMessage = $"Fondos insuficientes. Saldo disponible: {currentAccount.Balance:N2}€, Precio de la transacción: {_viewModel.TotalPrice:N2}€.";
+            }
+            catch (InvalidSymbolException) 
+            {
+                _viewModel.ErrorMessage = "Símbolo de acción no válido. Por favor, verifica el símbolo ingresado.";
+            }
+
             catch (Exception ex)
             {
                 _viewModel.ErrorMessage = ex.Message;
-                //MessageBox.Show($"Error al comprar acciones: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-    } 
+    }
 }

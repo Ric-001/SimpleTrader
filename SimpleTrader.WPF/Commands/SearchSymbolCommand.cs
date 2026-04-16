@@ -1,4 +1,5 @@
-﻿using SimpleTrader.Domain.Services;
+﻿using SimpleTrader.Domain.Exceptions;
+using SimpleTrader.Domain.Services;
 using SimpleTrader.WPF.ViewModels;
 using System.ComponentModel;
 using System.Windows;
@@ -35,15 +36,22 @@ namespace SimpleTrader.WPF.Commands
 
         public async void Execute(object? parameter)
         {
+            _viewModel.ErrorMessage = string.Empty;
+            _viewModel.StatusMessage = string.Empty;
+
             try
             {
                 double stockPrice = await _stockPriceService.GetPrice(_viewModel.Symbol);
                 _viewModel.SearchResultSymbol = _viewModel.Symbol.ToUpper();
                 _viewModel.StockPrice = stockPrice;
             }
+            catch (InvalidSymbolException)
+            {
+                _viewModel.ErrorMessage = "Símbolo de acción no válido. Por favor, verifica el símbolo.";
+            }
             catch (Exception e)
             {
-                MessageBox.Show($"Error al obtener el precio de la acción: {e.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _viewModel.ErrorMessage = $"Error al obtener el precio de la acción: {e.Message}";
             }
         }
     }

@@ -20,9 +20,9 @@ namespace SimpleTrader.WPF.ViewModels
         public int SharesToBuy { get => _sharesToBuy; set => SetProperty(ref _sharesToBuy, value, [nameof(TotalPrice)]); }
         
         public double TotalPrice => StockPrice * SharesToBuy;
-        public MessageViewModel ErrorMessageViewModel => new();
+        public MessageViewModel ErrorMessageViewModel { get; } = new();
         public string ErrorMessage { set => ErrorMessageViewModel.Message = value; }
-        public MessageViewModel StatusMessageViewModel => new ();
+        public MessageViewModel StatusMessageViewModel { get; } = new ();
         public string StatusMessage { set => StatusMessageViewModel.Message = value; }
 
         public ICommand SearchSymbolCommand { get; set; }

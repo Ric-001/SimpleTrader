@@ -4,7 +4,7 @@ namespace SimpleTrader.Domain.Services
     public interface IStockPriceService
     {
         /// <summary>
-        /// Obtiene el precio actual de una acción dada su símbolo. Este método es asíncrono y puede lanzar excepciones si el símbolo no es válido o si hay problemas de conexión con la fuente de datos.
+        /// Obtiene el precio actual de una acción dado su símbolo. Este método es asíncrono y puede lanzar excepciones si el símbolo no es válido o si no se obtiene el precio de la acción.
         /// </summary>
         /// <param name="symbol">El símbolo de la acción.</param>
         /// <returns>El precio actual de la acción.</returns>
