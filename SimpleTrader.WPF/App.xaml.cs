@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SimpleTrader.Domain.Services.AuthenticationService;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.WPF.Configuracion;
@@ -13,6 +14,7 @@ namespace SimpleTrader.WPF
 {
     public partial class App : Application
     {
+        private IHost _host;
         private IServiceProvider _serviceProvider = null!;
 
         protected override void OnStartup(StartupEventArgs e)
@@ -21,17 +23,32 @@ namespace SimpleTrader.WPF
 
             ConfigureCulture();
 
-            var configuration = BuildConfiguration();
-            var fmpOptions = BuildFmpOptions(configuration);
 
-            _serviceProvider = new ServiceCollection()
-                .AddInfrastructure(configuration, fmpOptions)
-                .AddPresentation()
-                .BuildServiceProvider();
+            _host = Host.CreateDefaultBuilder()
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.SetBasePath(Directory.GetCurrentDirectory());
+                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            })
+            .ConfigureServices((context, services) =>
+            {
+                var fmpOptions = BuildFmpOptions(context.Configuration);
+                services.AddInfrastructure(context.Configuration, fmpOptions)
+                        .AddPresentation();
+            })
+            .Build();
 
-            //IAuthenticationService authService = _serviceProvider.GetRequiredService<IAuthenticationService>();
-            //authService.Login("testuser", "password123");
-            _serviceProvider.GetRequiredService<MainWindow>().Show();
+            _host.Start();
+
+            _host.Services.GetRequiredService<MainWindow>().Show();
+
+        }
+
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            await _host.StopAsync();
+            _host.Dispose();
+            base.OnExit(e);
         }
 
         // ── Cultura ────────────────────────────────────────────────────────────────
@@ -53,13 +70,7 @@ namespace SimpleTrader.WPF
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
         }
 
-        // ── Configuración ──────────────────────────────────────────────────────────
-
-        private static IConfiguration BuildConfiguration() => new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
-
+        
         private static FinancialModelingPrepOptions BuildFmpOptions(IConfiguration configuration)
         {
             var options = configuration
