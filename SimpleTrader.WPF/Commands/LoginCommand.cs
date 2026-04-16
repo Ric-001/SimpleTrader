@@ -2,21 +2,15 @@
 using SimpleTrader.WPF.State.Authenticators;
 using SimpleTrader.WPF.State.Navigators;
 using SimpleTrader.WPF.ViewModels;
-using System.Windows.Input;
+
 
 namespace SimpleTrader.WPF.Commands
 {
-    public class LoginCommand : ICommand
+    public class LoginCommand : AsyncCommandBase
     {
         private readonly LoginViewModel _loginViewModel;
         private readonly IAuthenticator _authenticator;
         private readonly IRenavigator _renavigator;
-        
-        public event EventHandler? CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
 
         public LoginCommand(LoginViewModel loginViewModel, IAuthenticator authenticator, IRenavigator renavigator)
         {
@@ -25,36 +19,21 @@ namespace SimpleTrader.WPF.Commands
             _renavigator = renavigator;
         }
 
-
-
-
-        public bool CanExecute(object? parameter)
+        protected override async Task ExecuteAsync(object? parameter)
         {
-            return true;
+            _loginViewModel.ErrorMessage = string.Empty;
+            await _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
+            _renavigator.Renavigate();
         }
 
-       
-        public async void Execute(object? parameter)
+        protected override void OnExecutionFailed(Exception ex)
         {
-            try
+            _loginViewModel.ErrorMessage = ex switch
             {
-                await _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
-                _renavigator.Renavigate();
-            }
-            catch (UserNotFoundException)
-            {
-                _loginViewModel.ErrorMessage = "El usuario no existe.";
-            }
-            catch (InvalidPasswordException)
-            {
-                _loginViewModel.ErrorMessage = "Contraseña incorrecta.";
-            }
-            catch (Exception ex)
-            {
-                _loginViewModel.ErrorMessage = "No se ha podido registrar al usuario.";
-            }
+                UserNotFoundException => "El usuario no existe.",
+                InvalidPasswordException => "Contraseña incorrecta.",
+                _ => "No se ha podido iniciar sesión."
+            };
         }
-
-        
     }
 }
