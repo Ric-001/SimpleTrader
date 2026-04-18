@@ -19,10 +19,11 @@ namespace SimpleTrader.WPF.ViewModels
         public ICommand ViewRegisterCommand { get; }
 
 
-        public LoginViewModel(IAuthenticator authenticator, IRenavigator renavigator)
+        public LoginViewModel(IAuthenticator authenticator, IRenavigator loginRenavigator, IRenavigator registerRenavigator)
         {
             _authenticator = authenticator;
-            LoginCommand = new LoginCommand(this, authenticator, renavigator);
+            LoginCommand = new LoginCommand(this, authenticator, loginRenavigator);
+            ViewRegisterCommand = new RenavigateCommand(registerRenavigator);
         }
     }
 }
