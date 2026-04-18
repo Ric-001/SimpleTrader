@@ -1,0 +1,26 @@
+﻿using System.Windows.Input;
+
+namespace SimpleTrader.WPF.ViewModels
+{
+    public class RegisterViewModel : ViewModelBase
+    {
+        private string _username = string.Empty;
+        private string _email = string.Empty;
+        private string _password = string.Empty;
+        private string _confirmPassword = string.Empty;
+
+        public string Username { get => _username; set => SetProperty(ref _username, value); }
+        public string Email { get => _email; set => SetProperty(ref _email, value); }
+        public string Password { get => _password; set => SetProperty(ref _password, value); }
+        public string ConfirmPassword { get => _confirmPassword; set => SetProperty(ref _confirmPassword, value); }
+
+        public ICommand RegisterCommand { get;  }
+        public ICommand ViewLoginCommand { get; }
+        public MessageViewModel ErrorMessageViewModel { get; }
+
+        public RegisterViewModel()
+        {
+            ErrorMessageViewModel = new MessageViewModel();
+        }
+    }
+}
