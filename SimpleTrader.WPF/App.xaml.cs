@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SimpleTrader.Domain.Services.AuthenticationService;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.WPF.Configuracion;
 using System.Diagnostics.CodeAnalysis;
