@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Data;
 
-namespace SimpleTrader.WPF.Converters
+namespace SimpleTrader.WPF.UI.Converters
 {
-    class EqualValueToParameterConverter : IValueConverter
+    public class EqualValueToParameterConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

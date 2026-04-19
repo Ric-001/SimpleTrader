@@ -22,7 +22,7 @@ namespace SimpleTrader.WPF.Commands
         protected override async Task ExecuteAsync(object? parameter)
         {
             _loginViewModel.ErrorMessage = string.Empty;
-            await _authenticator.Login(_loginViewModel.Username, parameter?.ToString() ?? string.Empty);
+            await _authenticator.Login(_loginViewModel.Username, _loginViewModel.Password);
             _renavigator.Renavigate();
         }
 

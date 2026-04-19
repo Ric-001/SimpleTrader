@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace SimpleTrader.WPF.Converters
+namespace SimpleTrader.WPF.UI.Converters
 {
     public class InverseBoolToVisibilityConverter : IValueConverter
     {

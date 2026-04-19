@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace SimpleTrader.WPF.Converters
+namespace SimpleTrader.WPF.UI.Converters
 {
     public class EmptyStringToZeroConverter : IValueConverter
     {

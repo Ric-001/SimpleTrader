@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SimpleTrader.WPF"
         xmlns:controls="clr-namespace:SimpleTrader.WPF.Controls"
         xmlns:vm="clr-namespace:SimpleTrader.WPF.ViewModels"
-        xmlns:conv="clr-namespace:SimpleTrader.WPF.Converters"
+        xmlns:conv="clr-namespace:SimpleTrader.WPF.UI.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
         Icon="pack://application:,,,/Resources/Icons/SimpleTrader.ico"
