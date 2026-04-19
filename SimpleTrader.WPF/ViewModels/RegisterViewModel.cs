@@ -1,4 +1,7 @@
-﻿using System.Windows.Input;
+﻿using SimpleTrader.WPF.Commands;
+using SimpleTrader.WPF.State.Authenticators;
+using SimpleTrader.WPF.State.Navigators;
+using System.Windows.Input;
 
 namespace SimpleTrader.WPF.ViewModels
 {
@@ -17,10 +20,13 @@ namespace SimpleTrader.WPF.ViewModels
         public ICommand RegisterCommand { get;  }
         public ICommand ViewLoginCommand { get; }
         public MessageViewModel ErrorMessageViewModel { get; }
+        public string ErrorMessage { set => ErrorMessageViewModel.Message = value; }
 
-        public RegisterViewModel()
+        public RegisterViewModel(IAuthenticator authenticator, IRenavigator loginRenavigator, IRenavigator registerRenavigator)
         {
             ErrorMessageViewModel = new MessageViewModel();
+            ViewLoginCommand = new RenavigateCommand(loginRenavigator);
+            RegisterCommand = new RegisterCommand(this, authenticator, registerRenavigator);
         }
     }
 }

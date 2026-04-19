@@ -14,7 +14,7 @@ namespace SimpleTrader.WPF.UI.Helpers
                 typeof(string),                                             // tipo del valor
                 typeof(PasswordBoxHelper),                                  // clase propietaria
                 new FrameworkPropertyMetadata(                              // metadatos
-                    string.Empty,                                           // valor por defecto
+                    null,                                           // valor por defecto
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,  // Garantiza que WPF sepa que la propiedad es bidireccional por defecto y propague correctamente el valor del PasswordBox al ViewModel.
                     OnBoundPasswordChanged));                               //   callback al cambiar
 

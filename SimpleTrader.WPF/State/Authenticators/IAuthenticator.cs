@@ -11,6 +11,7 @@ namespace SimpleTrader.WPF.State.Authenticators
         Account? CurrentAccount { get; }
         bool IsLoggedIn { get; }
         Task<RegistrationResult> Register(string email, string username, string password, string confirmPassword);
+        
         /// <summary>
         /// Realiza el proceso de inicio de sesión para un usuario utilizando su correo electrónico y contraseña. Este método es asíncrono y puede lanzar excepciones si las credenciales son incorrectas o si ocurre algún error durante el proceso de autenticación.
         /// </summary>
