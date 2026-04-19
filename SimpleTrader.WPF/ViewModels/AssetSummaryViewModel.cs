@@ -12,7 +12,7 @@ namespace SimpleTrader.WPF.ViewModels
 
         public AssetSummaryViewModel(AssetStore assetStore)
         {
-            AssetListingViewModel = new(assetStore);
+            AssetListingViewModel = new(assetStore, 3);
             _assetStore = assetStore;
             _assetStore.StateChanged += OnAssetStoreStateChanged;
         }

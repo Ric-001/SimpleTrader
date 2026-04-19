@@ -7,13 +7,15 @@ namespace SimpleTrader.WPF.ViewModels
     {
         private readonly AssetStore _assetStore;
         private readonly ObservableCollection<AssetViewModel> _assets;
+        private readonly int _maxNumbreAssets;
 
         public IEnumerable<AssetViewModel> Assets => _assets;
 
-        public AssetListingViewModel(AssetStore assetStore)
+        public AssetListingViewModel(AssetStore assetStore, int maxNumberAssets = 0)
         {
             _assetStore = assetStore;
             _assets = new ObservableCollection<AssetViewModel>();
+            _maxNumbreAssets = maxNumberAssets;
             _assetStore.StateChanged += OnAssetStoreStateChanged;
 
             ResetAssets();
@@ -27,6 +29,9 @@ namespace SimpleTrader.WPF.ViewModels
                 .Where(g => g.Shares > 0)
                 .OrderByDescending(a => a.Shares);
 
+            if (_maxNumbreAssets > 0)
+                assetViewModels = assetViewModels.Take(_maxNumbreAssets);
+            
 
             _assets.Clear();
 
