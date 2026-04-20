@@ -14,14 +14,13 @@ namespace SimpleTrader.WPF
     public partial class App : Application
     {
         private IHost _host;
-        private IServiceProvider _serviceProvider = null!;
+        //private IServiceProvider _serviceProvider = null!;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             ConfigureCulture();
-
 
             _host = Host.CreateDefaultBuilder()
             .ConfigureAppConfiguration((context, config) =>

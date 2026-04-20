@@ -18,8 +18,6 @@ namespace SimpleTrader.WPF.ViewModels
             _assetStore.StateChanged += OnAssetStoreStateChanged;
         }
 
-       
-
         private void OnAssetStoreStateChanged()
         {
             OnPropertyChanged(nameof(AccountBalance));
