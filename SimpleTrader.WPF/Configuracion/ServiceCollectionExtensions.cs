@@ -35,6 +35,8 @@ namespace SimpleTrader.WPF.Configuracion
             
             services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
+            
+
             return services;
         }
 
@@ -42,11 +44,18 @@ namespace SimpleTrader.WPF.Configuracion
         {
             
             services.AddSingleton<ISimpleTraderViewModelFactory, SimpleTraderViewModelFactory>();
+            
+            services.AddSingleton<Func<int?, AssetListingViewModel>>(sp =>
+                        maxNumber => new AssetListingViewModel(sp.GetRequiredService<AssetStore>(), maxNumber));
+            
             services.AddSingleton<BuyViewModel>();
             services.AddSingleton<PortfolioViewModel>();
             services.AddSingleton<LoginViewModel>();
             services.AddSingleton<RegisterViewModel>();
             services.AddSingleton<AssetSummaryViewModel>();
+
+            
+
 
             services.AddSingleton<HomeViewModel>(services => new HomeViewModel(
                 services.GetRequiredService<AssetSummaryViewModel>(),
