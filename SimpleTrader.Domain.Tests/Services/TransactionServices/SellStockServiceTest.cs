@@ -52,15 +52,23 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
         }
 
         [Test]
-        public void SellStock_WithInvalidSumbol_ThrowsInvalidSymbolException()
+        public void SellStock_WithInvalidSymbol_ThrowsInvalidSymbolException()
         {
-            string symbol = "INVALID";
-            Account seller = CreateAccount(symbol, 10);
-            _mockStockPriceService.Setup(s => s.GetPrice(symbol)).ThrowsAsync(new InvalidSymbolException(symbol, "Invalid symbol"));
+            //Arrange
+            string invalidSymbol = "INVALID";
+            Account seller = CreateAccount(invalidSymbol, 10);
+
+            // Le decimos al mock: cuando te pidan el precio de "INVALID", lanza la excepción
+            _mockStockPriceService
+                .Setup(s => s.GetPrice(invalidSymbol))
+                .ThrowsAsync(new InvalidSymbolException(invalidSymbol, "Invalid symbol"));
+
+            
+            //ACT + ASSERT (juntos porque esperamos una excepción)
 
             Assert.ThrowsAsync<InvalidSymbolException>(async () =>
             {
-                await _sellStockService.SellStock(seller, symbol, 5);
+               await _sellStockService.SellStock(seller, invalidSymbol, 5);
             });
         }
 
