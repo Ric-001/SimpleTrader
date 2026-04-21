@@ -75,12 +75,38 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
         [Test]
         public void SellStock_WithGetPriceFailure_ThrowsException()
         {
+            //Arrange
+            string symbol = "T";
+            Account seller = CreateAccount(symbol, 10);
 
+            // Le decimos al mock: cuando te pidan el precio de "T", lanza la excepción
+            _mockStockPriceService
+                .Setup(s => s.GetPrice(symbol))
+                .ThrowsAsync(new Exception("Failed to get price"));
+
+            //ACT + ASSERT (juntos porque esperamos una excepción)
+            Assert.ThrowsAsync<Exception>(async () =>
+            {
+                await _sellStockService.SellStock(seller, symbol, 5);
+            });
         }
 
         [Test]
-        public void SellStock_WithSuccessfulSell_ReturnsAccountWithNewTransaction()
+        public async Task SellStock_WithSuccessfulSell_ReturnsAccountWithNewTransaction()
         {
+            //Arrange
+            string symbol = "T";
+            Account sellerAccount = CreateAccount(symbol, 10);
+
+            _mockStockPriceService.Setup(s => s.GetPrice(symbol)).ReturnsAsync(150);
+            _mockAccountService.Setup(s => s.Update(sellerAccount.Id, sellerAccount)).ReturnsAsync(sellerAccount);
+
+            //Act
+            Account result = await _sellStockService.SellStock(sellerAccount, symbol, 5);
+
+            Assert.AreEqual(750, result.Balance); // 5 shares * $150 each
+            Assert.AreEqual(2, result.AssetTransactions.Count); // One purchase and one sale
+            Assert.IsFalse(result.AssetTransactions.Last().IsPurchase); // Last transaction should be a sale
 
         }
     }
