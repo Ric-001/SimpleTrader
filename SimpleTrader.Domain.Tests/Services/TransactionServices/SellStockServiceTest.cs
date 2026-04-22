@@ -3,6 +3,7 @@ using Moq;
 using SimpleTrader.Domain.Services.TransactionServices;
 using SimpleTrader.Domain.Models;
 using SimpleTrader.Domain.Exceptions;
+using System.ComponentModel;
 
 namespace SimpleTrader.Domain.Tests.Services.TransactionServices
 {
@@ -25,13 +26,21 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
         [Test]
         public void SellStock_WithInsufficentShares_ThrowsInsufficientSharesException()
         {
+            //Arrange
             string symbol = "T";
-            Account seller = CreateAccount(symbol, 10);
+            int accionesQueSeVenden = 20;
+            int accionesPropias = 10;
 
-            Assert.ThrowsAsync<InsufficientSharesException>(async () =>
-            {
-                await _sellStockService.SellStock(seller, symbol, 20);
-            });
+            Account seller = CreateAccount(symbol, accionesPropias);
+
+            //ACT + ASSERT (juntos porque esperamos una excepción)
+
+            InsufficientSharesException exception = Assert.ThrowsAsync<InsufficientSharesException>(async () => await _sellStockService.SellStock(seller, symbol, accionesQueSeVenden));
+
+            Assert.AreEqual(symbol, exception.Symbol);
+            Assert.AreEqual(accionesPropias, exception.AccountShares);
+            Assert.AreEqual(accionesQueSeVenden, exception.RequiredShares);
+
         }
 
         private static Account CreateAccount(string symbol, int shares)
@@ -66,10 +75,11 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
             
             //ACT + ASSERT (juntos porque esperamos una excepción)
 
-            Assert.ThrowsAsync<InvalidSymbolException>(async () =>
-            {
-               await _sellStockService.SellStock(seller, invalidSymbol, 5);
-            });
+            InvalidSymbolException exception = Assert.ThrowsAsync<InvalidSymbolException>(async () => await _sellStockService.SellStock(seller, invalidSymbol, 5));
+            
+            Assert.AreEqual(invalidSymbol, exception.Symbol);
+
+
         }
 
         [Test]

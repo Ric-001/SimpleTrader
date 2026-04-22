@@ -21,7 +21,7 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
             // Configurar dependencias simuladas (mocks) para IStockPriceService y IDataService<Account>
             _mockStockPriceService = new Mock<IStockPriceService>();
             _mockAccountService = new Mock<IDataService<Account>>();
-            
+
             _buyStockService = new BuyStockService(_mockStockPriceService.Object, _mockAccountService.Object);
 
         }
@@ -54,7 +54,9 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
 
             //Act & Assert
 
-            Assert.ThrowsAsync<InvalidSymbolException>(async () => await _buyStockService.BuyStock(buyerAccount, symbol, 10));
+            InvalidSymbolException exception = Assert.ThrowsAsync<InvalidSymbolException>(async () => await _buyStockService.BuyStock(buyerAccount, symbol, 10));
+
+            Assert.AreEqual(symbol, exception.Symbol);
 
         }
 
@@ -67,7 +69,7 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
             Account buyer = CreateAccount(symbol, 10);
 
             _mockStockPriceService.Setup(s => s.GetPrice(symbol)).ThrowsAsync(new Exception("Failed to get price"));
-            
+
             //Act & Assert
             Assert.ThrowsAsync<Exception>(async () => await _buyStockService.BuyStock(buyer, symbol, 10));
         }
@@ -77,19 +79,28 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
         {
             //Arrange
             string symbol = "AAPL";
-            Account buyer = new Account { Balance = 500 }; // Set a low balance to trigger insufficient funds
-            _mockStockPriceService.Setup(s => s.GetPrice(symbol)).ReturnsAsync(150); // Price per share is 150
+            double saldoActual = 1000;
+            double precioPorAccion = 150;
+            int accionesParaComprar = 20;
+
+            Account buyer = new Account { Balance = saldoActual }; // Set a low balance to trigger insufficient funds
+            _mockStockPriceService.Setup(s => s.GetPrice(symbol)).ReturnsAsync(precioPorAccion); // Price per share is 150
 
             //Act & Assert
-            Assert.ThrowsAsync<InsufficientFundsException>(async () => await _buyStockService.BuyStock(buyer, symbol, 10));
+            InsufficientFundsException exception = Assert.ThrowsAsync<InsufficientFundsException>(async () => await _buyStockService.BuyStock(buyer, symbol, accionesParaComprar));
+
+            Assert.AreEqual(saldoActual, exception.AccountBalance);
+            Assert.AreEqual(precioPorAccion * accionesParaComprar, exception.RequiredBalance);
+
+
         }
 
         [Test]
         public void BuyStock_WithAccountUpdateFailure_ThrowsException()
         {
             //Arrange
-            string symbol = "AAPL";
-            Account buyer = new Account { Balance = 500 }; 
+            string symbol = It.IsAny<string>();
+            Account buyer = new Account { Balance = 500 };
             _mockStockPriceService.Setup(s => s.GetPrice(symbol)).ReturnsAsync(150); // Price per share is 150
             _mockAccountService.Setup(s => s.Update(buyer.Id, buyer)).ThrowsAsync(new Exception("Failed to update account"));
 
@@ -113,7 +124,25 @@ namespace SimpleTrader.Domain.Tests.Services.TransactionServices
             Assert.IsNotNull(updatedBuyer);
             Assert.IsTrue(updatedBuyer.Balance == 500 - 150); // Balance should be reduced by the cost of the purchase
             Assert.IsTrue(updatedBuyer.AssetTransactions.Count == 1); // There should be one transaction recorded
-            Assert.IsTrue(updatedBuyer.AssetTransactions.First().IsPurchase); 
+            Assert.IsTrue(updatedBuyer.AssetTransactions.First().IsPurchase);
+        }
+
+
+        [Test]
+        public async Task BuyStock_WithSuccesfulPurchase_UpdateIsCalledExactlyOnce()
+        {
+            //Arrange 
+            string symbol = "COORECT_SYMBOL";
+            Account initialBuyer = new Account { Balance = 500 };
+
+            _mockStockPriceService.Setup(s => s.GetPrice(symbol)).ReturnsAsync(150); // Price per share is 150
+            _mockAccountService.Setup(s => s.Update(initialBuyer.Id, initialBuyer)).ReturnsAsync(initialBuyer);
+
+            //Act
+            var updatedBuyer = await _buyStockService.BuyStock(initialBuyer, symbol, 1);
+
+            //Assert
+            _mockAccountService.Verify(s => s.Update(initialBuyer.Id, initialBuyer), Times.Once()); // Verificar que Update se llamó exactamente una vez con el Account actualizado correctamente
         }
     }
 }
