@@ -23,14 +23,29 @@ namespace SimpleTrader.EntityFramework
 
         public SimpleTraderDbContext CreateDbContext(string[]? args = null)
         {
-            var connectionString = _configuration?.GetConnectionString("Default")
-            ?? BuildDesignTimeConfiguration().GetConnectionString("Default")
-            ?? throw new InvalidOperationException("No se encontró la cadena de conexión.");
+            var config = _configuration ?? BuildDesignTimeConfiguration();
 
-            var options = new DbContextOptionsBuilder<SimpleTraderDbContext>();
-            options.UseSqlServer(connectionString);
+            var provider = config["DatabaseProvider"]
+                ?? throw new InvalidOperationException("No se encontró 'DatabaseProvider' en la configuración.");
 
-            return new SimpleTraderDbContext(options.Options);
+            var connectionString = config.GetConnectionString(provider)
+                ?? throw new InvalidOperationException($"No se encontró la cadena de conexión para el proveedor '{provider}'.");
+
+            var optionsBuilder = new DbContextOptionsBuilder<SimpleTraderDbContext>();
+
+            switch (provider)
+            {
+                case "SqlServer":
+                    optionsBuilder.UseSqlServer(connectionString);
+                    break;
+                case "Sqlite":
+                    optionsBuilder.UseSqlite(connectionString);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Proveedor de base de datos no soportado: '{provider}'.");
+            }
+
+            return new SimpleTraderDbContext(optionsBuilder.Options);
         }
 
         private static IConfiguration BuildDesignTimeConfiguration() => new ConfigurationBuilder()

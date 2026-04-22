@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SimpleTrader.EntityFramework;
 using SimpleTrader.FinancialModelingPrepAPI.Options;
 using SimpleTrader.WPF.Configuracion;
 using System.Diagnostics.CodeAnalysis;
@@ -14,7 +16,6 @@ namespace SimpleTrader.WPF
     public partial class App : Application
     {
         private IHost _host;
-        //private IServiceProvider _serviceProvider = null!;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -37,6 +38,13 @@ namespace SimpleTrader.WPF
             .Build();
 
             _host.Start();
+
+            SimpleTraderDbContextFactory contextFactory = _host.Services.GetRequiredService<SimpleTraderDbContextFactory>();
+
+            using (var context = contextFactory.CreateDbContext())
+            {
+                context.Database.Migrate();
+            }
 
             _host.Services.GetRequiredService<MainWindow>().Show();
 
