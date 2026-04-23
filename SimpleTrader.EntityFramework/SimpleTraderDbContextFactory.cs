@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace SimpleTrader.EntityFramework
 {
@@ -25,25 +22,18 @@ namespace SimpleTrader.EntityFramework
         {
             var config = _configuration ?? BuildDesignTimeConfiguration();
 
-            var provider = config["DatabaseProvider"]
-                ?? throw new InvalidOperationException("No se encontró 'DatabaseProvider' en la configuración.");
+            var provider = config["DatabaseProvider"] ?? throw new InvalidOperationException("Falta 'DatabaseProvider' en appsettings.json. Valores válidos: 'Sqlite' o 'SqlServer'.");
 
-            var connectionString = config.GetConnectionString(provider)
-                ?? throw new InvalidOperationException($"No se encontró la cadena de conexión para el proveedor '{provider}'.");
+            var connectionString = config.GetConnectionString(provider) ?? throw new InvalidOperationException($"No hay cadena de conexión para '{provider}' en appsettings.json. " +                    $"Añade una entrada en 'ConnectionStrings:{provider}'.");
 
             var optionsBuilder = new DbContextOptionsBuilder<SimpleTraderDbContext>();
 
-            switch (provider)
+            _ = provider switch
             {
-                case "SqlServer":
-                    optionsBuilder.UseSqlServer(connectionString);
-                    break;
-                case "Sqlite":
-                    optionsBuilder.UseSqlite(connectionString);
-                    break;
-                default:
-                    throw new InvalidOperationException($"Proveedor de base de datos no soportado: '{provider}'.");
-            }
+                "SqlServer" => optionsBuilder.UseSqlServer(connectionString),
+                "Sqlite" => optionsBuilder.UseSqlite(connectionString),
+                _ => throw new InvalidOperationException($"Proveedor '{provider}' no soportado. Usa 'Sqlite' o 'SqlServer'.")
+            };
 
             return new SimpleTraderDbContext(optionsBuilder.Options);
         }

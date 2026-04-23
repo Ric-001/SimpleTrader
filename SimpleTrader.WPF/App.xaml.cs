@@ -22,29 +22,10 @@ namespace SimpleTrader.WPF
             base.OnStartup(e);
 
             ConfigureCulture();
-
-            _host = Host.CreateDefaultBuilder()
-            .ConfigureAppConfiguration((context, config) =>
-            {
-                config.SetBasePath(Directory.GetCurrentDirectory());
-                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            })
-            .ConfigureServices((context, services) =>
-            {
-                var fmpOptions = BuildFmpOptions(context.Configuration);
-                services.AddInfrastructure(context.Configuration, fmpOptions)
-                        .AddPresentation();
-            })
-            .Build();
-
+            _host = BuildHost();
             _host.Start();
 
-            SimpleTraderDbContextFactory contextFactory = _host.Services.GetRequiredService<SimpleTraderDbContextFactory>();
-
-            using (var context = contextFactory.CreateDbContext())
-            {
-                context.Database.Migrate();
-            }
+            ApplyMigrations();
 
             _host.Services.GetRequiredService<MainWindow>().Show();
 
@@ -99,5 +80,32 @@ namespace SimpleTrader.WPF
             Current.Shutdown();
             throw new InvalidOperationException(message); // satisface al compilador
         }
+
+        private void ApplyMigrations()
+        {
+            using var context = _host.Services
+                .GetRequiredService<SimpleTraderDbContextFactory>()
+                .CreateDbContext();
+            
+            context.Database.Migrate();
+        }
+
+        private IHost BuildHost()
+        {
+            return Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration((_, config) =>
+                {
+                    config.SetBasePath(Directory.GetCurrentDirectory());
+                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                })
+                .ConfigureServices((context, services) =>
+                {
+                    var fmpOptions = BuildFmpOptions(context.Configuration);
+                    services.AddInfrastructure(context.Configuration, fmpOptions)
+                            .AddPresentation();
+                })
+                .Build();
+        }
+        
     }
 }

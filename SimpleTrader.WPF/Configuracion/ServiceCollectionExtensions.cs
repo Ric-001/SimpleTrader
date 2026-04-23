@@ -36,75 +36,67 @@ namespace SimpleTrader.WPF.Configuracion
             
             services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 
-            
-
             return services;
         }
 
         internal static IServiceCollection AddPresentation(this IServiceCollection services)
         {
-            
-            services.AddSingleton<ISimpleTraderViewModelFactory, SimpleTraderViewModelFactory>();
-            
-            services.AddSingleton<Func<int?, AssetListingViewModel>>(sp =>
-                        maxNumber => new AssetListingViewModel(sp.GetRequiredService<AssetStore>(), maxNumber));
-            
-            services.AddSingleton<BuyViewModel>();
-            services.AddSingleton<PortfolioViewModel>();
-            services.AddSingleton<LoginViewModel>();
-            services.AddSingleton<RegisterViewModel>();
-            services.AddSingleton<AssetSummaryViewModel>();
-
-            
-
-
-            services.AddSingleton<HomeViewModel>(services => new HomeViewModel(
-                services.GetRequiredService<AssetSummaryViewModel>(),
-                MajorIndexListingViewModel.LoadMajorIndexViewModel(services.GetRequiredService<IMajorIndexService>())));
-
-            
-            services.AddScoped<CreateViewModel<HomeViewModel>>(services =>
-            {
-                return () => services.GetRequiredService<HomeViewModel>();
-            });
-
-            services.AddSingleton<CreateViewModel<BuyViewModel>>(services =>
-            {
-                return () => services.GetRequiredService<BuyViewModel>();
-            });
-
-            services.AddSingleton<ViewModelDelegateRenavigator<HomeViewModel>>();
-            services.AddSingleton<ViewModelDelegateRenavigator<RegisterViewModel>>();
-            services.AddSingleton<ViewModelDelegateRenavigator<LoginViewModel>>();
-
-            services.AddSingleton<CreateViewModel<PortfolioViewModel>>(services =>
-            {
-                return () => services.GetRequiredService<PortfolioViewModel>();
-            });
-
-
-            services.AddSingleton<CreateViewModel<RegisterViewModel>>(services =>
-            {
-                return () => new RegisterViewModel(
-                    services.GetRequiredService<IAuthenticator>(),
-                    services.GetRequiredService<ViewModelDelegateRenavigator<LoginViewModel>>(),
-                    services.GetRequiredService<ViewModelDelegateRenavigator<LoginViewModel>>());
-            });
-
-            services.AddSingleton<CreateViewModel<LoginViewModel>>(services =>
-            {
-                return () => new LoginViewModel(
-                    services.GetRequiredService<IAuthenticator>(),
-                    services.GetRequiredService<ViewModelDelegateRenavigator<HomeViewModel>>(),
-                    services.GetRequiredService<ViewModelDelegateRenavigator<RegisterViewModel>>());
-            });
-
-            services.AddSingleton<INavigator, Navigator>();
-            services.AddSingleton<IAuthenticator, Authenticator>();
+            // Estado compartido
             services.AddSingleton<IAccountStore, AccountStore>();
             services.AddSingleton<AssetStore>();
-            services.AddScoped<MainViewModel>();
-            services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
+            services.AddSingleton<INavigator, Navigator>();
+            services.AddSingleton<IAuthenticator, Authenticator>();
+
+            // Factory de AssetListingViewModel parametrizado por límite de activos
+            services.AddSingleton<Func<int?, AssetListingViewModel>>(sp =>
+                maxNumber => new AssetListingViewModel(
+                    sp.GetRequiredService<AssetStore>(), maxNumber));
+
+            // ViewModels de página
+            services.AddSingleton<AssetSummaryViewModel>();
+            services.AddSingleton<BuyViewModel>();
+            services.AddSingleton<PortfolioViewModel>();
+
+            // MajorIndexListingViewModel requiere carga asíncrona inicial
+            services.AddSingleton<MajorIndexListingViewModel>(sp =>
+                MajorIndexListingViewModel.LoadMajorIndexViewModel(
+                    sp.GetRequiredService<IMajorIndexService>()));
+
+            services.AddSingleton<HomeViewModel>();
+
+            // Renavigators
+            services.AddSingleton<ViewModelDelegateRenavigator<HomeViewModel>>();
+            services.AddSingleton<ViewModelDelegateRenavigator<LoginViewModel>>();
+            services.AddSingleton<ViewModelDelegateRenavigator<RegisterViewModel>>();
+
+            // Factories de ViewModel (usadas por SimpleTraderViewModelFactory)
+            services.AddSingleton<CreateViewModel<HomeViewModel>>(sp =>
+                sp.GetRequiredService<HomeViewModel>);
+
+            services.AddSingleton<CreateViewModel<BuyViewModel>>(sp =>
+                sp.GetRequiredService<BuyViewModel>);
+
+            services.AddSingleton<CreateViewModel<PortfolioViewModel>>(sp =>
+                sp.GetRequiredService<PortfolioViewModel>);
+
+            services.AddSingleton<CreateViewModel<LoginViewModel>>(sp => () =>
+                new LoginViewModel(
+                    sp.GetRequiredService<IAuthenticator>(),
+                    sp.GetRequiredService<ViewModelDelegateRenavigator<HomeViewModel>>(),
+                    sp.GetRequiredService<ViewModelDelegateRenavigator<RegisterViewModel>>()));
+
+            services.AddSingleton<CreateViewModel<RegisterViewModel>>(sp => () =>
+                new RegisterViewModel(
+                    sp.GetRequiredService<IAuthenticator>(),
+                    sp.GetRequiredService<ViewModelDelegateRenavigator<LoginViewModel>>(),
+                    sp.GetRequiredService<ViewModelDelegateRenavigator<LoginViewModel>>()));
+
+            services.AddSingleton<ISimpleTraderViewModelFactory, SimpleTraderViewModelFactory>();
+
+            // Ventana principal
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<MainWindow>(sp =>
+                new MainWindow(sp.GetRequiredService<MainViewModel>()));
 
             return services;
         }
