@@ -41,6 +41,12 @@ namespace SimpleTrader.EntityFramework
         private static IConfiguration BuildDesignTimeConfiguration() => new ConfigurationBuilder()
            .SetBasePath(Directory.GetCurrentDirectory())
            .AddJsonFile("appsettings.json", optional: true)
-           .Build();
+        // Fallback para tiempo de diseño si no se encuentra appsettings.json
+        .AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            ["DatabaseProvider"] = "Sqlite",
+            ["ConnectionStrings:Sqlite"] = "Data Source=SimpleTraderDB.sqlite"
+        })
+        .Build();
     }
 }
