@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:SimpleTrader.WPF.Views"
              xmlns:vm="clr-namespace:SimpleTrader.WPF.ViewModels"
              xmlns:conv="clr-namespace:SimpleTrader.WPF.UI.Converters"
+             xmlns:controls="clr-namespace:SimpleTrader.WPF.Controls"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:BuyViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -30,42 +31,21 @@
         
         <TextBlock Grid.Row="2" Margin="0 20 0 0" Text="{Binding ErrorMessageViewModel.Message}" Foreground="DarkRed" HorizontalAlignment="Center" 
            Visibility="{Binding ErrorMessageViewModel.HasMessage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        
-        <Grid Margin="0 20 0 0" Grid.Row="3" MaxHeight="400" MaxWidth="450" VerticalAlignment="Top">
-            <Grid.Style>
-                <Style TargetType="Grid">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding SearchResultSymbol}" Value="">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1"  Padding="20" CornerRadius="3 0 0 3">
-                <StackPanel >
-                    <TextBlock Text="{Binding SearchResultSymbol}" FontSize="32"  HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding StockPrice, StringFormat=C}" FontSize="14" Margin="0 10 0 0" HorizontalAlignment="Center"/>
-                </StackPanel>
-            </Border>
-            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness=" 0 1 1 1" Padding="20" CornerRadius="0 3 3 0">
-                <StackPanel>
-                    <WrapPanel Margin="0 10">
-                        <TextBlock Text="Acciones a comprar:" Width="150" HorizontalAlignment="Left" />
-                        <TextBox Text="{Binding SharesToTransfer, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N0}, Converter={StaticResource EmptyStringToZeroConverter}}" Width="50" HorizontalContentAlignment="Right"/>
-                    </WrapPanel>
-                    <WrapPanel Margin="0 10">
-                        <TextBlock Text="Precio por acción:" Width="150" />
-                        <TextBlock Text="{Binding StockPrice, StringFormat={}{0:C}, FallbackValue='0,00€'}" />
-                    </WrapPanel>
-                    <TextBlock Margin="0 10" Text="{Binding TotalPrice, StringFormat=C}" FontSize="32"  HorizontalAlignment="Center"/>
-                    <Button Content="Comprar" Command="{Binding BuyStockCommand}" FontSize="18" Margin="0 10 0 0" Padding="20 6"/>
-                </StackPanel>
-            </Border>
-        </Grid>
-        
+
+        <controls:SearchSymbolResultPanel Margin="0 20 0 0" Grid.Row="3">
+            <StackPanel>
+                <WrapPanel Margin="0 10">
+                    <TextBlock Text="Acciones a comprar:" Width="150" HorizontalAlignment="Left" />
+                    <TextBox Text="{Binding SharesToTransfer, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N0}, Converter={StaticResource EmptyStringToZeroConverter}}" Width="50" HorizontalContentAlignment="Right"/>
+                </WrapPanel>
+                <WrapPanel Margin="0 10">
+                    <TextBlock Text="Precio por acción:" Width="150" />
+                    <TextBlock Text="{Binding StockPrice, StringFormat={}{0:C}, FallbackValue='0,00€'}" />
+                </WrapPanel>
+                <TextBlock Margin="0 10" Text="{Binding TotalPrice, StringFormat=C}" FontSize="32"  HorizontalAlignment="Center"/>
+                <Button Content="Comprar" Command="{Binding BuyStockCommand}" FontSize="18" Margin="0 10 0 0" Padding="20 6"/>
+            </StackPanel>
+        </controls:SearchSymbolResultPanel>
+
     </Grid>
 </UserControl>

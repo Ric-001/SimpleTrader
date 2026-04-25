@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:SimpleTrader.WPF.Views"
              xmlns:vm="clr-namespace:SimpleTrader.WPF.ViewModels"
              xmlns:conv="clr-namespace:SimpleTrader.WPF.UI.Converters"
+             xmlns:controls="clr-namespace:SimpleTrader.WPF.Controls"
              d:DataContext="{d:DesignInstance Type=vm:SellViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -20,13 +21,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="cbAssets" Grid.Row="0" ItemsSource="{Binding AssetListingViewModel.Assets}" DisplayMemberPath="Symbol" 
+        <ComboBox x:Name="cbAssets" Grid.Row="0" Width="200" ItemsSource="{Binding AssetListingViewModel.Assets}" 
                   SelectedItem="{Binding SelectedAsset}" SelectionChanged="ComboBox_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Symbol}" Margin="5,0"/>
-                        <Border BorderBrush="Black" BorderThickness="1 0 0 0" Margin="2,0"/>
+                        <TextBlock Text="{Binding Symbol}" Margin="5,0" Width="35"/>
+                        <Border Margin="10 0" BorderBrush="Black" BorderThickness="1 0 0 0" />
                         <TextBlock Text="{Binding Shares}" Margin="5,0"/>
                     </StackPanel>
                 </DataTemplate>
@@ -37,5 +38,21 @@
 
         <TextBlock Grid.Row="2" Margin="0 20 0 0" Text="{Binding ErrorMessageViewModel.Message}" Foreground="DarkRed" HorizontalAlignment="Center" 
             Visibility="{Binding ErrorMessageViewModel.HasMessage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <controls:SearchSymbolResultPanel Margin="0 20 0 0" Grid.Row="3">
+            <StackPanel>
+                <WrapPanel Margin="0 10">
+                    <TextBlock Text="Acciones a la venta:" Width="150" HorizontalAlignment="Left" />
+                    <TextBox Text="{Binding SharesToTransfer, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N0}, Converter={StaticResource EmptyStringToZeroConverter}}" Width="50" HorizontalContentAlignment="Right"/>
+                </WrapPanel>
+                <WrapPanel Margin="0 10">
+                    <TextBlock Text="Precio por acción:" Width="150" />
+                    <TextBlock Text="{Binding StockPrice, StringFormat={}{0:C}, FallbackValue='0,00€'}" />
+                </WrapPanel>
+                <TextBlock Margin="0 10" Text="{Binding TotalPrice, StringFormat=C}" FontSize="32"  HorizontalAlignment="Center"/>
+                <Button Content="Vender" Command="{Binding SellStockCommand}" FontSize="18" Margin="0 10 0 0" Padding="20 6"/>
+            </StackPanel>
+        </controls:SearchSymbolResultPanel>
+
     </Grid>
 </UserControl>

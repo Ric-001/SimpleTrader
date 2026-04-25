@@ -13,15 +13,15 @@ namespace SimpleTrader.WPF.ViewModels
         private string _searchResultSymbol = string.Empty;
         private double _stockPrice = 0;
         private int _sharesToTransfer = 0;
-        private AssetViewModel _selectedAsset;
+        private AssetViewModel? _selectedAsset;
 
         public AssetListingViewModel AssetListingViewModel { get; }
 
-        public string Symbol { get => _symbol; set => SetProperty(ref _symbol, value); }
+        public string Symbol { get => SelectedAsset?.Symbol ?? ""; }
         public string SearchResultSymbol { get => _searchResultSymbol; set => SetProperty(ref _searchResultSymbol, value); }
         public double StockPrice { get => _stockPrice; set => SetProperty(ref _stockPrice, value, [nameof(TotalPrice)]); }
         public int SharesToTransfer { get => _sharesToTransfer; set => SetProperty(ref _sharesToTransfer, value, [nameof(TotalPrice)]); }
-        public AssetViewModel SelectedAsset { get => _selectedAsset; set => SetProperty(ref _selectedAsset, value); }
+        public AssetViewModel SelectedAsset { get => _selectedAsset; set => SetProperty(ref _selectedAsset, value, [nameof(Symbol)]); }
 
         public double TotalPrice => StockPrice * SharesToTransfer;
         public MessageViewModel ErrorMessageViewModel { get; } = new();
