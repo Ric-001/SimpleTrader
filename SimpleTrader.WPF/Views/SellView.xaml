@@ -4,9 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SimpleTrader.WPF.Views"
+             xmlns:vm="clr-namespace:SimpleTrader.WPF.ViewModels"
+             xmlns:conv="clr-namespace:SimpleTrader.WPF.UI.Converters"
+             d:DataContext="{d:DesignInstance Type=vm:SellViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Sell View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"/>
+    <UserControl.Resources>
+        <conv:EmptyStringToZeroConverter x:Key="EmptyStringToZeroConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ComboBox x:Name="cbAssets" Grid.Row="0" ItemsSource="{Binding AssetListingViewModel.Assets}" DisplayMemberPath="Symbol" 
+                  SelectedItem="{Binding SelectedAsset}" SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Symbol}" Margin="5,0"/>
+                        <Border BorderBrush="Black" BorderThickness="1 0 0 0" Margin="2,0"/>
+                        <TextBlock Text="{Binding Shares}" Margin="5,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock Grid.Row="1" Margin="0 20 0 0" Text="{Binding StatusMessageViewModel.Message}" Foreground="DarkGreen" HorizontalAlignment="Center" 
+           Visibility="{Binding StatusMessageViewModel.HasMessage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <TextBlock Grid.Row="2" Margin="0 20 0 0" Text="{Binding ErrorMessageViewModel.Message}" Foreground="DarkRed" HorizontalAlignment="Center" 
+            Visibility="{Binding ErrorMessageViewModel.HasMessage, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
 </UserControl>

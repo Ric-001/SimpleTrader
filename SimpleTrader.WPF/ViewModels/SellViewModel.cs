@@ -38,8 +38,10 @@ namespace SimpleTrader.WPF.ViewModels
             AssetListingViewModel = new AssetListingViewModel(assetStore);
 
             SearchSymbolCommand = new SearchSymbolCommand(this, stockPriceService);
-            
-            //SellStockCommand = new SellStockCommand(this, sellStockService, accountStore);
+            SellStockCommand = new SellStockCommand(this, sellStockService, accountStore);
+
+            ErrorMessageViewModel = new MessageViewModel();
+            StatusMessageViewModel = new MessageViewModel();
         }
 
     }
