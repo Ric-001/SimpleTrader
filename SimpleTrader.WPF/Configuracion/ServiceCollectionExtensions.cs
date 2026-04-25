@@ -55,6 +55,7 @@ namespace SimpleTrader.WPF.Configuracion
             // ViewModels de página
             services.AddSingleton<AssetSummaryViewModel>();
             services.AddSingleton<BuyViewModel>();
+            services.AddSingleton<SellViewModel>();
             services.AddSingleton<PortfolioViewModel>();
 
             // MajorIndexListingViewModel requiere carga asíncrona inicial
@@ -75,6 +76,9 @@ namespace SimpleTrader.WPF.Configuracion
 
             services.AddSingleton<CreateViewModel<BuyViewModel>>(sp =>
                 sp.GetRequiredService<BuyViewModel>);
+
+            services.AddSingleton<CreateViewModel<SellViewModel>>(sp =>
+                sp.GetRequiredService<SellViewModel>);
 
             services.AddSingleton<CreateViewModel<PortfolioViewModel>>(sp =>
                 sp.GetRequiredService<PortfolioViewModel>);

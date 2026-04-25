@@ -55,7 +55,7 @@
                 <StackPanel>
                     <WrapPanel Margin="0 10">
                         <TextBlock Text="Acciones a comprar:" Width="150" HorizontalAlignment="Left" />
-                        <TextBox Text="{Binding SharesToBuy, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N0}, Converter={StaticResource EmptyStringToZeroConverter}}" Width="50" HorizontalContentAlignment="Right"/>
+                        <TextBox Text="{Binding SharesToTransfer, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N0}, Converter={StaticResource EmptyStringToZeroConverter}}" Width="50" HorizontalContentAlignment="Right"/>
                     </WrapPanel>
                     <WrapPanel Margin="0 10">
                         <TextBlock Text="Precio por acción:" Width="150" />

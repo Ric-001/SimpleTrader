@@ -42,7 +42,9 @@
                 <RadioButton Grid.Column="2" Content="Compra" Command="{Binding UpdateCurrentViewModelCommand}" Tag="/Resources/Icons/Compra.png"
                          IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource EqualityToBooleanConverter},ConverterParameter={x:Type vm:BuyViewModel}}" 
                          CommandParameter="{x:Static nav:ViewType.Buy}"/>
-                <RadioButton Grid.Column="3" Content="Venta" Tag="/Resources/Icons/Venta.png"/>
+                <RadioButton Grid.Column="3" Content="Venta" Command="{Binding UpdateCurrentViewModelCommand}" Tag="/Resources/Icons/Venta.png"
+                             IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource EqualityToBooleanConverter},ConverterParameter={x:Type vm:SellViewModel}}" 
+                             CommandParameter="{x:Static nav:ViewType.Sell}"/>
             </Grid>
         </Grid>
     </Grid>
