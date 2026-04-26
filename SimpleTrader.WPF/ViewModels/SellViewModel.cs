@@ -21,7 +21,7 @@ namespace SimpleTrader.WPF.ViewModels
         public string SearchResultSymbol { get => _searchResultSymbol; set => SetProperty(ref _searchResultSymbol, value); }
         public double StockPrice { get => _stockPrice; set => SetProperty(ref _stockPrice, value, [nameof(TotalPrice)]); }
         public int SharesToTransfer { get => _sharesToTransfer; set => SetProperty(ref _sharesToTransfer, value, [nameof(TotalPrice)]); }
-        public AssetViewModel SelectedAsset { get => _selectedAsset; set => SetProperty(ref _selectedAsset, value, [nameof(Symbol)]); }
+        public AssetViewModel? SelectedAsset { get => _selectedAsset; set => SetProperty(ref _selectedAsset, value, [nameof(Symbol)]); }
 
         public double TotalPrice => StockPrice * SharesToTransfer;
         public MessageViewModel ErrorMessageViewModel { get; } = new();

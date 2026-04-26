@@ -31,6 +31,7 @@ namespace SimpleTrader.WPF.Commands
             Account currentAccount = _accountStore.CurrentAccount!;
             Account updated = await _sellStockService.SellStock(currentAccount, _viewModel.Symbol, _viewModel.SharesToTransfer);
             _accountStore.CurrentAccount = updated;
+            _viewModel.SearchResultSymbol = string.Empty;
             _viewModel.StatusMessage = $"Venta realizada: {_viewModel.SharesToTransfer} acciones de {_viewModel.Symbol} por {_viewModel.StockPrice * _viewModel.SharesToTransfer:N2}€.";
         }
         protected override void OnExecutionFailed(Exception ex)
