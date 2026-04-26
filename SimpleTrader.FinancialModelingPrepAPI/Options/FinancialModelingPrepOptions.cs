@@ -8,6 +8,7 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Options
     {
         public string BaseUrl { get; set; } = string.Empty;
         public string ProfileEndpoint { get; set; } = string.Empty;
+        public string QuoteEndpoint { get; set; } = string.Empty;
         public string ApiKey { get; set; } = string.Empty;
     }
 }

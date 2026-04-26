@@ -13,8 +13,6 @@ namespace SimpleTrader.FinancialModelingPrepAPI
         readonly string endpoint;
         readonly string apiKey;
 
-        //https://financialmodelingprep.com/stable/profile?symbol=AAPL&apikey=RYiPoM5uCF5boZ9HUh5u8pZ3w0k9yFcF
-
         public FinancialModelingPrepHttpCliente(FinancialModelingPrepOptions options)
         {
             baseUrl = options.BaseUrl.TrimEnd('/');
@@ -56,6 +54,25 @@ namespace SimpleTrader.FinancialModelingPrepAPI
             if (result == null || result.Count == 0)
                 throw new InvalidOperationException($"Failed to deserialize response from {uri}");
             
+            return result[0];
+        }
+
+        public async Task<T> GetAsync<T>(string symbol, string endpoint)
+        {
+            string uri = baseUrl + "/" + endpoint.TrimStart('/') + "?symbol=" + symbol + "&apikey=" + apiKey;
+            HttpResponseMessage response = await GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrWhiteSpace(jsonResponse) || jsonResponse.Trim() == "[]")
+                throw new InvalidSymbolException(symbol, $"El símbolo '{symbol}' no es válido o no existe.");
+
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var result = JsonSerializer.Deserialize<List<T>>(jsonResponse, options);
+
+            if (result == null || result.Count == 0)
+                throw new InvalidOperationException($"Failed to deserialize response from {uri}");
+
             return result[0];
         }
     }

@@ -63,8 +63,7 @@ namespace SimpleTrader.WPF
             CultureInfo.DefaultThreadCurrentUICulture = culture;
             FrameworkElement.LanguageProperty.OverrideMetadata(
                 typeof(FrameworkElement),
-                new FrameworkPropertyMetadata(
-                    XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
+                new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
         }
     }
 }
