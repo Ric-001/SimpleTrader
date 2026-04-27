@@ -60,6 +60,5 @@
                 <Button Content="Vender" Command="{Binding SellStockCommand}" FontSize="18" Margin="0 10 0 0" Padding="20 6"/>
             </StackPanel>
         </controls:SearchSymbolResultPanel>
-
     </Grid>
 </UserControl>
