@@ -22,15 +22,21 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="cbAssets" Grid.Row="0" Width="200" ItemsSource="{Binding AssetListingViewModel.Assets}" 
+        <ComboBox x:Name="cbAssets" Grid.Row="0" Width="200" ItemsSource="{Binding AssetListingViewModel.Assets}"  HorizontalContentAlignment="Stretch"  
                   SelectedItem="{Binding SelectedAsset}" SelectionChanged="ComboBox_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Symbol}" Margin="5,0" Width="35"/>
-                        <Border Margin="10 0" BorderBrush="Black" BorderThickness="1 0 0 0" />
-                        <TextBlock Text="{Binding Shares}" Margin="5,0"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="2"/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Symbol}" Margin="5,0"/>
+                        <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1 0 0 0"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Shares}" Margin="5,0" HorizontalAlignment="Right" TextAlignment="Right"/>
+                    </Grid>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
