@@ -8,23 +8,18 @@ namespace SimpleTrader.FinancialModelingPrepAPI.Services
 {
     public class StockPriceService : IStockPriceService
     {
-        private readonly FinancialModelingPrepOptions _options;
+        private readonly FinancialModelingPrepHttpCliente _client;
 
-        public StockPriceService(FinancialModelingPrepOptions options)
+        public StockPriceService(FinancialModelingPrepHttpCliente client)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-
-            if (string.IsNullOrWhiteSpace(_options.ApiKey))
-                throw new InvalidOperationException("ApiKey de FinancialModelingPrep no configurada.");
+            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
+        
 
         public async Task<double> GetPrice(string symbol)
         {
-            using FinancialModelingPrepHttpCliente client = new (_options);
             
-            //"https://financialmodelingprep.com/stable/profile?symbol=AAPL"
-
-            StockPriceDto stockPrice = await client.GetAsync<StockPriceDto>(symbol);
+            StockPriceDto stockPrice = await _client.GetAsync<StockPriceDto>(symbol);
 
             if (stockPrice.Price == 0)
                 throw new InvalidSymbolException(symbol);

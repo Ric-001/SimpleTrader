@@ -7,24 +7,25 @@ using System.Text.Json;
 
 namespace SimpleTrader.FinancialModelingPrepAPI
 {
-    public class FinancialModelingPrepHttpCliente : HttpClient
+    public class FinancialModelingPrepHttpCliente 
     {
-        readonly string baseUrl;
-        readonly string endpoint;
-        readonly string apiKey;
+        private readonly HttpClient _client;
+        private readonly  string baseUrl;
+        private readonly string endpoint;
+        private readonly string apiKey;
 
-        public FinancialModelingPrepHttpCliente(FinancialModelingPrepOptions options)
+        public FinancialModelingPrepHttpCliente(FinancialModelingPrepOptions options, HttpClient client)
         {
+            _client = client;
             baseUrl = options.BaseUrl.TrimEnd('/');
             endpoint = options.ProfileEndpoint.TrimStart('/');
             apiKey = options.ApiKey;
-
         }
 
         public async Task<T> GetAsync<T>(string symbol)
         {
             string uri = baseUrl + "/" + endpoint + "?symbol=" + symbol + "&apikey=" + apiKey;
-            HttpResponseMessage response = await GetAsync(uri);
+            HttpResponseMessage response = await _client.GetAsync(uri);
             response.EnsureSuccessStatusCode();
             string jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -60,7 +61,7 @@ namespace SimpleTrader.FinancialModelingPrepAPI
         public async Task<T> GetAsync<T>(string symbol, string endpoint)
         {
             string uri = baseUrl + "/" + endpoint.TrimStart('/') + "?symbol=" + symbol + "&apikey=" + apiKey;
-            HttpResponseMessage response = await GetAsync(uri);
+            HttpResponseMessage response = await _client.GetAsync(uri);
             response.EnsureSuccessStatusCode();
             string jsonResponse = await response.Content.ReadAsStringAsync();
 

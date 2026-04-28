@@ -24,6 +24,7 @@ namespace SimpleTrader.WPF
         {
             return Host.CreateDefaultBuilder(args)
                 .AddConfiguration()
+                .AddFinanceAPI()
                 .AddDbContext()
                 .AddServices()
                 .AddStores()
