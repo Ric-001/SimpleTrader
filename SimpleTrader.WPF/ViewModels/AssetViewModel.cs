@@ -10,5 +10,10 @@
             Symbol = symbol;
             Shares = shares;
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

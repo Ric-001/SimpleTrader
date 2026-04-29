@@ -1,9 +1,5 @@
-﻿using SimpleTrader.Domain.Services;
-using SimpleTrader.WPF.Commands;
-using SimpleTrader.WPF.ViewModels;
-using SimpleTrader.WPF.ViewModels.Factories;
-using System.ComponentModel;
-using System.Windows.Input;
+﻿using SimpleTrader.WPF.ViewModels;
+
 
 namespace SimpleTrader.WPF.State.Navigators
 {
@@ -16,7 +12,7 @@ namespace SimpleTrader.WPF.State.Navigators
 
         public ViewModelBase? CurrentViewModel
         {
-            get => _currentViewModel; set { _currentViewModel = value; StateChanged?.Invoke(); }
+            get => _currentViewModel; set { _currentViewModel?.Dispose(); _currentViewModel = value; StateChanged?.Invoke(); }
         }
     }
 }

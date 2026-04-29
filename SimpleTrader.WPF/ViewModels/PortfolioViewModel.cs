@@ -16,5 +16,10 @@ namespace SimpleTrader.WPF.ViewModels
             AssetListingViewModel = assetListingFactory(_maxAssets);
         }
 
+        public override void Dispose()
+        {
+            AssetListingViewModel.Dispose();
+            base.Dispose();
+        }
     }
 }

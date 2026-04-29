@@ -38,5 +38,10 @@ namespace SimpleTrader.WPF.ViewModels
 
             return true;
         }
+
+        public virtual void Dispose()
+        {
+            // Override in derived classes to release resources if needed
+        }
     }
 }

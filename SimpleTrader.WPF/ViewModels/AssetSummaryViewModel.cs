@@ -23,5 +23,12 @@ namespace SimpleTrader.WPF.ViewModels
             OnPropertyChanged(nameof(AccountBalance));
            
         }
+
+        public override void Dispose()
+        {
+            _assetStore.StateChanged -= OnAssetStoreStateChanged;
+            AssetListingViewModel.Dispose();
+            base.Dispose();
+        }
     }
 }

@@ -31,5 +31,11 @@ namespace SimpleTrader.WPF.ViewModels
             LoginCommand = new LoginCommand(this, _authenticator, loginRenavigator);
             ViewRegisterCommand = new RenavigateCommand(registerRenavigator);
         }
+
+        public override void Dispose()
+        {
+            ErrorMessageViewModel.Dispose();
+            base.Dispose();
+        }
     }
 }

@@ -45,5 +45,16 @@ namespace SimpleTrader.WPF.ViewModels
         {
             ResetAssets();
         }
+
+        public override void Dispose()
+        {
+            foreach (var assetViewModel in _assets)
+            {
+                assetViewModel.Dispose();
+            }
+
+            _assetStore.StateChanged -= OnAssetStoreStateChanged;
+            base.Dispose();
+        }
     }
 }
